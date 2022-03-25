@@ -1,0 +1,33 @@
+Product Backlog:
+
+-Autetificare si autorizare :
+    -> Login
+    -> Logout
+    -> Register
+    -> Email de confirmare cont
+    -> Recover password
+    -> Creearea unu token la login care este invalidat la logout sau dupa o perioada de timp
+    ->Restrictionarea accesului la anumite pagini pe baza acelui token
+
+-User management
+     ->Un user isi poate modifica datele contului
+    ->Vizualizarea detaliilor unui user de catre un administrator
+    ->Un administrator poate adauga un user in black list
+    ->Trimiterea de email-uri user-ului cu informatii utile
+    ->Creearea unei recenzii pentru un film
+    ->Trimiterea de date catre MLCommInterface cu privire la actiunile user-ului
+    
+
+-Movie management
+    ->Un administrator poate adauga, edita, strege un film si detaliile acestuia
+    ->Un film va avea anumite categorii si rating-uri pe baza caruia este recomandat
+    ->Tag-uri pentru film
+    ->Cautarea unui film  - afisarea unei liste de filme pe baza filtrelor aplicate si a numelui dupa care este cautat + (sortare - daca avem timp) 
+    ->Afisarea unei liste de filme pe baza recomandarilor primite din MLCommInterface
+    ->Afisarea unui anumit film (link catre video, imagine, detalii, comentarii)
+    ->Recomandare urmatorului film (pe baza recomandarilor de la ML)
+->Sistemul de comentare
+->Calcul review averege
+
+    
+

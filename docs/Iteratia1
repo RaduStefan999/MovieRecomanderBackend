@@ -1,0 +1,9 @@
+Iteratia 1 - deadline 02.04.2022
+
+-Autetificare si autorizare :
+    -> Login
+    -> Logout
+    -> Register
+    -> Creearea unu token la login care este invalidat la logout sau dupa o perioada de timp
+    ->Restrictionarea accesului la anumite pagini pe baza acelui token
+
