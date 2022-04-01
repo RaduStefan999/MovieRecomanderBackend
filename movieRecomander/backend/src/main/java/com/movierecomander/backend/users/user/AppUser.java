@@ -14,26 +14,26 @@ public class AppUser extends User {
     private String gender;
     private LocalDate birthdate;
     private String country;
-    private String phoneString;
+    private String phoneNumber;
     @Transient
     private Integer age;
 
     public AppUser() {
     }
 
-    public AppUser(String gender, LocalDate birthday, String country, String phoneString) {
+    public AppUser(String gender, LocalDate birthdate, String country, String phoneNumber) {
         this.gender = gender;
-        this.birthdate = birthday;
+        this.birthdate = birthdate;
         this.country = country;
-        this.phoneString = phoneString;
+        this.phoneNumber = phoneNumber;
     }
 
-    public AppUser(Long id, String email, String name, String password, String gender, LocalDate birthdate, String country, String phoneString) {
+    public AppUser(Long id, String email, String name, String password, String gender, LocalDate birthdate, String country, String phoneNumber) {
         super(id, email, name, password);
         this.gender = gender;
         this.birthdate = birthdate;
         this.country = country;
-        this.phoneString = phoneString;
+        this.phoneNumber = phoneNumber;
     }
 
     public String getGender() {
@@ -48,11 +48,11 @@ public class AppUser extends User {
         this.gender = gender;
     }
 
-    public LocalDate getBirthday() {
+    public LocalDate getBirthdate() {
         return birthdate;
     }
 
-    public void setBirthday(LocalDate birthdate) {
+    public void setBirthdate(LocalDate birthdate) {
         this.birthdate = birthdate;
     }
 
@@ -64,12 +64,12 @@ public class AppUser extends User {
         this.country = country;
     }
 
-    public String getPhoneString() {
-        return phoneString;
+    public String getPhoneNumber() {
+        return phoneNumber;
     }
 
-    public void setPhoneString(String phoneString) {
-        this.phoneString = phoneString;
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
 
     @Override
@@ -77,9 +77,9 @@ public class AppUser extends User {
         return "AppUser{" +
                 super.toString() +
                 ", gender='" + gender + '\'' +
-                ", birthday='" + birthdate + '\'' +
+                ", birthdate='" + birthdate + '\'' +
                 ", country='" + country + '\'' +
-                ", phoneString='" + phoneString + '\'' +
+                ", phoneNumber='" + phoneNumber + '\'' +
                 '}';
     }
 }

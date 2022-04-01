@@ -25,6 +25,12 @@ public class AppUserController {
     public void registerUser(@RequestBody AppUser appUser)
     {
         appUserService.addNewAppUser(appUser);
+        System.out.println(appUser);
+    }
+
+    @DeleteMapping(path = "{appUserId}")
+    public void deleteUser(@PathVariable("appUserId") Long appUserId) {
+        appUserService.deleteAppUser(appUserId);
     }
 
 }
