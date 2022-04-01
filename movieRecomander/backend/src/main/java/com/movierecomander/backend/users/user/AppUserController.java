@@ -1,9 +1,7 @@
-package com.movierecomander.backend.user;
+package com.movierecomander.backend.users.user;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -21,6 +19,12 @@ public class AppUserController {
     public List<AppUser> getUsers()
     {
         return appUserService.getAppUsers();
+    }
+
+    @PostMapping
+    public void registerUser(@RequestBody AppUser appUser)
+    {
+        appUserService.addNewAppUser(appUser);
     }
 
 }
