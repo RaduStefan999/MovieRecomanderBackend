@@ -41,8 +41,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.sessionManagement().sessionCreationPolicy(STATELESS);
         http
                 .addFilter(new JwtAuthenticationFilter(authenticationManager(), jwtConfig, secretKey))
-                .addFilterAfter(new JwtTokenVerifier(secretKey, jwtConfig), JwtAuthenticationFilter.class);
-
+                .addFilterAfter(new JwtTokenVerifier(secretKey, jwtConfig), JwtAuthenticationFilter.class)
+                .authorizeRequests()
+                .antMatchers("/login", "/api/user/register").permitAll()
+                .anyRequest()
+                .authenticated();
     }
 
     @Override

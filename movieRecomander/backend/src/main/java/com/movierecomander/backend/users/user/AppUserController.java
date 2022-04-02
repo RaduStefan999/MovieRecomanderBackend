@@ -1,6 +1,7 @@
 package com.movierecomander.backend.users.user;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,6 +17,7 @@ public class AppUserController {
     }
 
     @GetMapping
+    @PreAuthorize("hasAnyRole('ROLE_USER')")
     public List<AppUser> getUsers()
     {
         return appUserService.getAppUsers();
