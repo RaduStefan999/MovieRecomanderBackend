@@ -5,6 +5,7 @@ import com.movierecomander.backend.users.User;
 import javax.persistence.Entity;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Transient;
+import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.time.Period;
 
@@ -70,6 +71,11 @@ public class AppUser extends User {
 
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
+    }
+
+    @Transactional
+    public void updateAppUser() {
+
     }
 
     @Override
