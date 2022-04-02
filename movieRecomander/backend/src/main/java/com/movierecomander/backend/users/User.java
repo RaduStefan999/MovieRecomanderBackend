@@ -19,17 +19,19 @@ public abstract class User {
     private String email;
     private String name;
     private String password; //password that will be stored as hash
+    private String role;
 
     public User()
     {
 
     }
 
-    public User(Long id, String email, String name, String password) {
+    public User(Long id, String email, String name, String password, String role) {
         this.id = id;
         this.email = email;
         this.name = name;
         this.password = password;
+        this.role = role;
     }
 
     public Long getId() {
@@ -62,6 +64,14 @@ public abstract class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 
     @Override

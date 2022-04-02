@@ -12,7 +12,7 @@ public class AppAdmin extends User {
     }
 
     public AppAdmin(Long id, String email, String name, String password) {
-        super(id, email, name, password);
+        super(id, email, name, password, role);
     }
 
     @Override
