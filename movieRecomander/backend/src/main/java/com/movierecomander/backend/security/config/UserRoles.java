@@ -8,13 +8,13 @@ import java.util.stream.Collectors;
 
 import static com.movierecomander.backend.security.config.UserPermissions.*;
 
-public enum UserRole {
+public enum UserRoles {
     USER(Sets.newHashSet(MOVIES_READ)),
     ADMIN(Sets.newHashSet(MOVIES_READ, MOVIES_WRITE, USERS_READ, USERS_WRITE));
 
     private final Set<UserPermissions> permissions;
 
-    UserRole(Set<UserPermissions> permissions) {
+    UserRoles(Set<UserPermissions> permissions) {
         this.permissions = permissions;
     }
 

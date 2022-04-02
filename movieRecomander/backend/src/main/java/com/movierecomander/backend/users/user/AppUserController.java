@@ -21,7 +21,7 @@ public class AppUserController {
         return appUserService.getAppUsers();
     }
 
-    @PostMapping
+    @PostMapping(path = "register")
     public void registerUser(@RequestBody AppUser appUser)
     {
         appUserService.addNewAppUser(appUser);

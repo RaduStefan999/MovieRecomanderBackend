@@ -1,6 +1,7 @@
 package com.movierecomander.backend.users.user;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -10,10 +11,12 @@ import java.util.Optional;
 public class AppUserService {
 
     private final AppUserRepository appUserRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public AppUserService(AppUserRepository appUserRepository) {
+    public AppUserService(AppUserRepository appUserRepository, PasswordEncoder passwordEncoder) {
         this.appUserRepository = appUserRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public List<AppUser> getAppUsers()
@@ -28,6 +31,8 @@ public class AppUserService {
         if (appUserOptional.isPresent()) {
             throw new IllegalStateException("email taken");
         }
+
+        appUser.setPassword(passwordEncoder.encode(appUser.getPassword()));
 
         appUserRepository.save(appUser);
     }

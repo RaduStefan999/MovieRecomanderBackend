@@ -1,6 +1,6 @@
 package com.movierecomander.backend.security.auth;
 
-import com.movierecomander.backend.security.config.UserRole;
+import com.movierecomander.backend.security.config.UserRoles;
 import com.movierecomander.backend.users.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -17,7 +17,7 @@ public class UserAuth implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return UserRole.valueOf(user.getRole()).getGrantedAuthorities();
+        return UserRoles.valueOf(user.getRole()).getGrantedAuthorities();
     }
 
     @Override
