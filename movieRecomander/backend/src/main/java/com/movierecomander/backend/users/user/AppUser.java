@@ -71,6 +71,7 @@ public class AppUser extends User {
 
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
+        //test
     }
 
     @Transactional
