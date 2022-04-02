@@ -75,7 +75,7 @@ public class AppUser extends User {
 
     @Transactional
     public void updateAppUser() {
-
+        //aa
     }
 
     @Override
