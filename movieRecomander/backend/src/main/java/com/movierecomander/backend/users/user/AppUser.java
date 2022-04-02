@@ -29,7 +29,7 @@ public class AppUser extends User {
         this.phoneNumber = phoneNumber;
     }
 
-    public AppUser(Long id, String email, String name, String password, String gender, LocalDate birthdate, String country, String phoneNumber) {
+    public AppUser(Long id, String email, String name, String password, String gender, LocalDate birthdate, String country, String phoneNumber, String role) {
         super(id, email, name, password, role);
         this.gender = gender;
         this.birthdate = birthdate;

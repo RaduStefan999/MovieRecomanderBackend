@@ -11,7 +11,7 @@ public class AppAdmin extends User {
     public AppAdmin() {
     }
 
-    public AppAdmin(Long id, String email, String name, String password) {
+    public AppAdmin(Long id, String email, String name, String password, String role) {
         super(id, email, name, password, role);
     }
 
