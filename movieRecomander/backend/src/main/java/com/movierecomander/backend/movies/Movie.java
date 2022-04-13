@@ -9,6 +9,7 @@ import java.util.List;
 @Entity
 @PrimaryKeyJoinColumn(name = "movieId")
 public class Movie {
+    private Long movieID;
     private String name;
     private String summary;
     private String description;
@@ -19,4 +20,7 @@ public class Movie {
 
     private String trailerLink;
     private String movieLink;
+
+    @OneToMany(mappedBy = "movie")
+    Set<Review> ratings;
 }

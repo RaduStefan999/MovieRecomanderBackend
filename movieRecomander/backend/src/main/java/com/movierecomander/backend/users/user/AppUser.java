@@ -91,4 +91,7 @@ public class AppUser extends User {
                 ", phoneNumber='" + phoneNumber + '\'' +
                 '}';
     }
+
+    @OneToMany(mappedBy = "appUser")
+    Set<Review> ratings;
 }
