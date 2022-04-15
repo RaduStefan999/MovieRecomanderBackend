@@ -1,13 +1,17 @@
 package com.movierecomander.backend.users.user;
 
+import com.movierecomander.backend.comments.Comment;
+import com.movierecomander.backend.reviews.Review;
 import com.movierecomander.backend.users.User;
 
 import javax.persistence.Entity;
+import javax.persistence.OneToMany;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Transient;
 import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.time.Period;
+import java.util.Set;
 
 import static com.movierecomander.backend.security.config.UserRoles.*;
 
@@ -94,4 +98,7 @@ public class AppUser extends User {
 
     @OneToMany(mappedBy = "appUser")
     Set<Review> ratings;
+
+    @OneToMany(mappedBy = "appUser")
+    Set<Comment> comments;
 }

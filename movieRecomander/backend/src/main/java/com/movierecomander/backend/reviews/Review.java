@@ -1,8 +1,8 @@
 package com.movierecomander.backend.reviews;
 
-import com.movierecomander.backend.movies.Movie;
-import com.movierecomander.backend.users.User;
+import com.movierecomander.backend.movies.movie.Movie;
 import com.movierecomander.backend.users.user.AppUser;
+import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.util.Objects;
@@ -10,16 +10,16 @@ import java.util.Objects;
 @Entity
 public class Review {
 
-    @EmbeddedId
-    ReviewKey id;
+    @Id
+    @GeneratedValue(strategy= GenerationType.AUTO, generator="native")
+    @GenericGenerator(name = "native", strategy = "native")
+    Long id;
 
     @ManyToOne
-    @MapsId("userId")
     @JoinColumn(name = "userId")
     AppUser appUser;
 
     @ManyToOne
-    @MapsId("movieId")
     @JoinColumn(name = "movieId")
     Movie movie;
 
@@ -28,27 +28,27 @@ public class Review {
     public Review() {
     }
 
-    public Review(ReviewKey id, AppUser appUser, Movie movie, Integer reviewValue) {
+    public Review(Long id, AppUser appUser, Movie movie, Integer reviewValue) {
         this.id = id;
         this.appUser = appUser;
         this.movie = movie;
         this.reviewValue = reviewValue;
     }
 
-    public ReviewKey getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(ReviewKey id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
-    public User getUser() {
+    public AppUser getAppUser() {
         return appUser;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setAppUser(AppUser appUser) {
+        this.appUser = appUser;
     }
 
     public Movie getMovie() {
@@ -72,11 +72,11 @@ public class Review {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Review review = (Review) o;
-        return id.equals(review.id) && user.equals(review.user) && movie.equals(review.movie) && reviewValue.equals(review.reviewValue);
+        return id.equals(review.id) && appUser.equals(review.appUser) && movie.equals(review.movie) && reviewValue.equals(review.reviewValue);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, user, movie, reviewValue);
+        return Objects.hash(id, appUser, movie, reviewValue);
     }
 }
