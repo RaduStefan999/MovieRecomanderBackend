@@ -2,11 +2,14 @@ package com.movierecomander.backend.users.user;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
+@Validated
 @RequestMapping(path = "api/user")
 public class AppUserController {
     private final AppUserService appUserService;
@@ -24,7 +27,7 @@ public class AppUserController {
     }
 
     @PostMapping(path = "register")
-    public void registerUser(@RequestBody AppUser appUser)
+    public void registerUser(@Valid @RequestBody AppUser appUser)
     {
         appUserService.addNewAppUser(appUser);
         System.out.println(appUser);
