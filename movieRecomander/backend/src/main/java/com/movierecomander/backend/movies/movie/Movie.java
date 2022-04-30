@@ -8,6 +8,7 @@ import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.*;
 import java.time.Duration;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -23,6 +24,7 @@ public class Movie {
     private String summary;
     private String description;
     private Integer ageRestriction;
+    //private List<String> tags = new ArrayList<>();
     @ManyToMany
     private List<MovieGenre> movieGenres;
     private LocalDate releaseDate;
@@ -54,6 +56,12 @@ public class Movie {
         this.movieLink = movieLink;
         this.ratings = ratings;
         this.comments = comments;
+
+        /**String[] words = name.split("\\s");
+        //this.tags.addAll(words);
+        for(MovieGenre genre : movieGenres){
+            this.tags.add(genre.getGenre());
+        }*/
     }
 
     public Long getId() {

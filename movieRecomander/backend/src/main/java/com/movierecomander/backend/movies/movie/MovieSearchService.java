@@ -22,7 +22,7 @@ public class MovieSearchService {
         return (movie, cq, cb) -> cb.like(movie.get("name"), "%" + name + "%");
     }
 
-    public List<Movie> getMovieByName(String movieName) {
+    public List<Movie> getMovieByTag(String movieName) {
         return movieRepository.findAll(movieNameContains(movieName));
     }
 }
