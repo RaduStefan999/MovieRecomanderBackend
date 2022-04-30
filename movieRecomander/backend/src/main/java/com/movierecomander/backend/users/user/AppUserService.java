@@ -44,4 +44,13 @@ public class AppUserService {
         }
         appUserRepository.deleteById(appUserId);
     }
+
+    public Optional<AppUser> read(Long id) {
+        return appUserRepository.findById(id);
+    }
+
+    public AppUser update(Long id, AppUser appUser) {
+         appUser.updateAppUser();
+         return appUserRepository.getById(id);
+    }
 }
