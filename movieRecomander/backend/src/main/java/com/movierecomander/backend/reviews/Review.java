@@ -35,6 +35,12 @@ public class Review {
         this.reviewValue = reviewValue;
     }
 
+    public void update(Review review) {
+        this.appUser = review.appUser;
+        this.movie = review.movie;
+        this.reviewValue = review.reviewValue;
+    }
+
     public Long getId() {
         return id;
     }
