@@ -20,6 +20,13 @@ public abstract class User {
 
     public User(String role) { this.role = role; }
 
+    public User(String email, String name, String password, String role) {
+        this.email = email;
+        this.name = name;
+        this.password = password;
+        this.role = role;
+    }
+
     public User(Long id, String email, String name, String password, String role) {
         this.id = id;
         this.email = email;
