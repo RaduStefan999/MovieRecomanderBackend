@@ -37,6 +37,13 @@ public class Comment {
         this.movie = movie;
     }
 
+    public void update(Comment comment) {
+        this.text = comment.text;
+        this.commentDate = comment.commentDate;
+        this.appUser = comment.appUser;
+        this.movie = comment.movie;
+    }
+
     public Long getId() {
         return id;
     }
