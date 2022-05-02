@@ -15,7 +15,7 @@ import java.net.http.HttpHeaders;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("files")
+@RequestMapping("api/v1/files")
 public class FileController {
 
     private final FileService fileService;
