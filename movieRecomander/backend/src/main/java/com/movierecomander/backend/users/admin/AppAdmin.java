@@ -14,6 +14,10 @@ public class AppAdmin extends User {
         super(String.valueOf(ADMIN));
     }
 
+    public AppAdmin(String email, String name, String password) {
+        super(email, name, password, String.valueOf(ADMIN));
+    }
+
     public AppAdmin(Long id, String email, String name, String password) {
         super(id, email, name, password, String.valueOf(ADMIN));
     }

@@ -11,8 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@Validated
-@RequestMapping(path = "api/user")
+@RequestMapping(path = "api/v1/user")
 public class AppUserController {
     private final AppUserService appUserService;
 
@@ -22,7 +21,7 @@ public class AppUserController {
     }
 
     @GetMapping
-    @PreAuthorize("hasAnyRole('ROLE_USER')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     public List<AppUser> getUsers()
     {
         return appUserService.getAppUsers();
