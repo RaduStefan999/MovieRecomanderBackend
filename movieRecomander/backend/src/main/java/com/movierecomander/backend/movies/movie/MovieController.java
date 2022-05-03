@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/v1/movie")
+@RequestMapping("/api/v1/movie/base")
 public class MovieController {
     private MovieRepository movieRepository;
 
@@ -19,16 +19,19 @@ public class MovieController {
         this.movieRepository = movieRepository;
     }
 
-    @GetMapping("/")
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
+    @GetMapping
+    //@PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
     public List<Movie> get(){
-        return this.movieRepository.findAll();
+        return movieRepository.findAll();
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
-    public Optional<Movie> getByID(@PathVariable("id") Long id){
-        return movieRepository.findById(id);
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
+    public ResponseEntity<Movie> getByID(@PathVariable("id") Long id){
+        if(movieRepository.findById(id).isEmpty()){
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(movieRepository.findById(id).get());
     }
 
     @PostMapping
@@ -38,15 +41,15 @@ public class MovieController {
         movieRepository.save(movie);
     }
 
-    @PutMapping
+    @PutMapping("/{id}")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
-    public ResponseEntity<Boolean> updateDescripiton(@PathVariable("id") Long id, @PathVariable("description") String description){
+    public ResponseEntity<Boolean> updateMovie(@PathVariable("id") Long id, @RequestBody Movie movie){
         var foundMovie = movieRepository.findById(id);
         if(foundMovie.isEmpty()){
             return ResponseEntity.notFound().build();
         }
 
-        foundMovie.get().setDescription(description);
+        foundMovie.get().update(movie);
         return ResponseEntity.ok(true);
     }
 

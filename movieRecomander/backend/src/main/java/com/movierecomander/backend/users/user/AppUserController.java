@@ -17,7 +17,7 @@ public class AppUserController {
     }
 
     @GetMapping
-    @PreAuthorize("hasAnyRole('ROLE_USER')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     public List<AppUser> getUsers()
     {
         return appUserService.getAppUsers();
