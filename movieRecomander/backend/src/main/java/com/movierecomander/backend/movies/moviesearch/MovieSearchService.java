@@ -1,6 +1,8 @@
-package com.movierecomander.backend.movies.movie;
+package com.movierecomander.backend.movies.moviesearch;
 
 
+import com.movierecomander.backend.movies.movie.Movie;
+import com.movierecomander.backend.movies.movie.MovieRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
