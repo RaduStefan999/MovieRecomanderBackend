@@ -58,6 +58,7 @@
     <property name="node.js.selected.package.tslint" value="(autodetect)" />
   </component>
   <component name="RunManager">
+<<<<<<< HEAD
     <configuration default="true" type="JetRunConfigurationType">
       <module name="movieRecomander" />
       <method v="2">
@@ -74,6 +75,11 @@
     <configuration name="BackendApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
       <module name="backend" />
       <option name="SPRING_BOOT_MAIN_CLASS" value="com.movierecomander.backend.BackendApplication" />
+=======
+    <configuration name="Unnamed" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <module name="movieRecomander" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+>>>>>>> b70979be9745042ceadcb2413f02c2cc9e490288
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -90,7 +96,14 @@
       <workItem from="1649871829086" duration="3789000" />
       <workItem from="1649928540984" duration="83000" />
       <workItem from="1649928679069" duration="4000" />
+<<<<<<< HEAD
       <workItem from="1651470671914" duration="17000" />
+=======
+      <workItem from="1651576073331" duration="1218000" />
+      <workItem from="1651577332744" duration="94000" />
+      <workItem from="1651577519236" duration="235000" />
+      <workItem from="1651577779447" duration="27000" />
+>>>>>>> b70979be9745042ceadcb2413f02c2cc9e490288
     </task>
     <servers />
   </component>

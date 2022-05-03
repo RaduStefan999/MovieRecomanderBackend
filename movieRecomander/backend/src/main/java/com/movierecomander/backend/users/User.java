@@ -1,8 +1,11 @@
 package com.movierecomander.backend.users;
 
+import com.movierecomander.backend.users.user.AppUser;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
@@ -10,10 +13,22 @@ public abstract class User {
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO, generator="native")
     @GenericGenerator(name = "native", strategy = "native")
+
+    @NotBlank(message="Id is mandatory")
     private Long id;
+
+    @NotBlank(message="Email is mandatory")
+    @Pattern(regexp="^[A-Za-z0-9+_.-]+@(.+)$", message = "cd")
     private String email;
+
+    @NotBlank(message="Name is mandatory")
     private String name;
+
+    @Pattern(regexp="^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#&()–[{}]:;',?/*~$^+=<>]).{8,20}$",message="length must be 8")
+    @NotBlank(message="Password is mandatory")
     private String password; //password that will be stored as hash
+
+    @NotBlank(message="Role is mandatory")
     private String role;
 
     public User() {}
@@ -79,5 +94,12 @@ public abstract class User {
                 ", name='" + name + '\'' +
                 ", password='" + password + '\'' +
                 '}';
+    }
+
+    public void update(AppUser appUser, Long id){
+        this.email = appUser.getEmail();
+        this.name = appUser.getName();
+        this.password = appUser.getPassword();
+        this.role = appUser.getRole();
     }
 }
