@@ -1,5 +1,6 @@
 package com.movierecomander.backend.movies.moviegenre;
 
+import com.movierecomander.backend.movies.movie.Movie;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.Entity;
@@ -16,6 +17,7 @@ public class MovieGenre {
     private Long id;
     private String genre;
 
+    public MovieGenre() {}
     public MovieGenre(String genre) {
         this.genre = genre;
     }

@@ -8,6 +8,7 @@ import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.*;
 import java.time.Duration;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -23,10 +24,11 @@ public class Movie {
     private String summary;
     private String description;
     private Integer ageRestriction;
+    //private List<String> tags = new ArrayList<>();
     @ManyToMany
     private List<MovieGenre> movieGenres;
     private LocalDate releaseDate;
-    private Duration duration;
+    private Integer duration;
 
     private String trailerLink;
     private String movieLink;
@@ -41,7 +43,7 @@ public class Movie {
     }
 
     public Movie(String name, String summary, String description, Integer ageRestriction,
-                 List<MovieGenre> movieGenres, LocalDate releaseDate, Duration duration, String trailerLink,
+                 List<MovieGenre> movieGenres, LocalDate releaseDate, Integer duration, String trailerLink,
                  String movieLink, Set<Review> ratings, Set<Comment> comments) {
         this.name = name;
         this.summary = summary;
@@ -54,6 +56,12 @@ public class Movie {
         this.movieLink = movieLink;
         this.ratings = ratings;
         this.comments = comments;
+
+        /**String[] words = name.split("\\s");
+        //this.tags.addAll(words);
+        for(MovieGenre genre : movieGenres){
+            this.tags.add(genre.getGenre());
+        }*/
     }
 
     public Long getId() {
@@ -112,11 +120,11 @@ public class Movie {
         this.releaseDate = releaseDate;
     }
 
-    public Duration getDuration() {
+    public Integer getDuration() {
         return duration;
     }
 
-    public void setDuration(Duration duration) {
+    public void setDuration(Integer duration) {
         this.duration = duration;
     }
 
@@ -151,6 +159,19 @@ public class Movie {
     public void setComments(Set<Comment> comments) {
         this.comments = comments;
     }
+
+    public void update(Movie movie) {
+        this.name = movie.name;
+        this.summary = movie.summary;
+        this.description = movie.description;
+        this.ageRestriction = movie.ageRestriction;
+        this.movieGenres = movie.movieGenres;
+        this.releaseDate = movie.releaseDate;
+        this.duration = movie.duration;
+        this.trailerLink = movie.trailerLink;
+        this.movieLink = movie.movieLink;
+    }
+
 
     @Override
     public boolean equals(Object o) {
