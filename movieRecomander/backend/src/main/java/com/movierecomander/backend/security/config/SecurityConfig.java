@@ -37,13 +37,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+        var jwtAuthenticationFilter = new JwtAuthenticationFilter(authenticationManager(), jwtConfig, secretKey);
+        jwtAuthenticationFilter.setFilterProcessesUrl("/api/v1/login");
+
+        http.cors();
         http.csrf().disable();
         http.sessionManagement().sessionCreationPolicy(STATELESS);
         http
-                .addFilter(new JwtAuthenticationFilter(authenticationManager(), jwtConfig, secretKey))
+                .addFilter(jwtAuthenticationFilter)
                 .addFilterAfter(new JwtTokenVerifier(secretKey, jwtConfig), JwtAuthenticationFilter.class)
                 .authorizeRequests()
-                .antMatchers("/login", "/api/user/register").permitAll()
+                .antMatchers("/api/v1/login", "/api/v1/user/register").permitAll()
                 .anyRequest()
                 .authenticated();
     }

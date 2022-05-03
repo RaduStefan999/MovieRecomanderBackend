@@ -37,6 +37,14 @@ public class AppUser extends User {
         this.phoneNumber = phoneNumber;
     }
 
+    public AppUser(String email, String name, String password, String gender, LocalDate birthdate, String country, String phoneNumber) {
+        super(email, name, password, String.valueOf(USER));
+        this.gender = gender;
+        this.birthdate = birthdate;
+        this.country = country;
+        this.phoneNumber = phoneNumber;
+    }
+
     public AppUser(Long id, String email, String name, String password, String gender, LocalDate birthdate, String country, String phoneNumber) {
         super(id, email, name, password, String.valueOf(USER));
         this.gender = gender;
