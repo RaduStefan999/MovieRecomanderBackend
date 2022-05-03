@@ -52,12 +52,13 @@ public class AppUserController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<AppUser> update(@RequestBody AppUser appUser, @PathVariable Long id) {
-        AppUser updatedUser = appUserService.update(id, appUser);
-        if (updatedUser == null) {
+    @PreAuthorize("hasRole(ADMIN)")
+    public ResponseEntity<Boolean> update(@RequestBody AppUser appUser, @PathVariable Long id) {
+
+        AppUser updatedUser = appUserService.updateService(id, appUser);
+        if (updatedUser==null) {
             return ResponseEntity.notFound().build();
-        } else {
-            return ResponseEntity.ok(updatedUser);
         }
+        return ResponseEntity.ok(true);
     }
 }

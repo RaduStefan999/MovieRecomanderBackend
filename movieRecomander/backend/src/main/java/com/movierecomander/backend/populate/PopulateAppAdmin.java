@@ -5,8 +5,6 @@ import com.movierecomander.backend.users.admin.AppAdminRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
-import org.springframework.context.annotation.Bean;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Arrays;
@@ -15,12 +13,12 @@ public class PopulateAppAdmin implements ApplicationRunner {
 
     private final AppAdminRepository appAdminRepository;
 
-    @Autowired
     private PasswordEncoder passwordEncoder;
 
     @Autowired
-    public PopulateAppAdmin( AppAdminRepository appAdminRepository) {
+    public PopulateAppAdmin( AppAdminRepository appAdminRepository, PasswordEncoder passwordEncoder) {
         this.appAdminRepository = appAdminRepository;
+        this.passwordEncoder=passwordEncoder;
     }
 
     public void run(ApplicationArguments args) {

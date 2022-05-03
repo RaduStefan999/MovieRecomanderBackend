@@ -101,4 +101,5 @@ public class AppUser extends User {
 
     @OneToMany(mappedBy = "appUser")
     Set<Comment> comments;
+
 }
