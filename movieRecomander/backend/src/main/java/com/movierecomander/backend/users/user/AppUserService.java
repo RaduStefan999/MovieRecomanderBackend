@@ -1,8 +1,12 @@
 package com.movierecomander.backend.users.user;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 import java.util.Optional;
@@ -24,7 +28,7 @@ public class AppUserService {
         return appUserRepository.findAll();
     }
 
-    public void addNewAppUser(AppUser appUser) {
+    public void addNewAppUser(com.movierecomander.backend.users.user.AppUser appUser) {
         Optional<AppUser> appUserOptional = appUserRepository
                 .findAppUserByEmail(appUser.getEmail());
 
@@ -43,5 +47,20 @@ public class AppUserService {
             throw new IllegalStateException("appUser with id " + appUserId + " does not exist");
         }
         appUserRepository.deleteById(appUserId);
+    }
+
+    public Optional<AppUser> read(Long id) {
+        return appUserRepository.findById(id);
+    }
+
+
+    public AppUser updateService(Long id,AppUser appUser) {
+        var foundUser = appUserRepository.findAppUserById(id);
+        if (foundUser.isEmpty()) {
+            return null;
+        }
+        foundUser.get().update(appUser,id);
+        appUserRepository.save(appUser);
+        return appUser;
     }
 }
