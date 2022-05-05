@@ -20,14 +20,14 @@ public class CommentController {
         this.commentRepository = commentRepository;
     }
 
-    @GetMapping("/")
+    @GetMapping
     @PreAuthorize("hasAnyRole('ROLE_USER')")
     @ResponseStatus(code = HttpStatus.OK, reason = "READ")
     public List<Comment> get() {
         return commentRepository.findAll();
     }
 
-    @PostMapping("/")
+    @PostMapping
     @PreAuthorize("hasAnyRole('ROLE_USER')")
     @ResponseStatus(code = HttpStatus.CREATED, reason = "CREATED")
     public void post(@RequestBody Comment comment) {

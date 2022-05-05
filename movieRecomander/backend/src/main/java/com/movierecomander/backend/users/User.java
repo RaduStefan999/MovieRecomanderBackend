@@ -14,7 +14,6 @@ public abstract class User {
     @GeneratedValue(strategy= GenerationType.AUTO, generator="native")
     @GenericGenerator(name = "native", strategy = "native")
 
-    @NotBlank(message="Id is mandatory")
     private Long id;
 
     @NotBlank(message="Email is mandatory")
@@ -24,7 +23,7 @@ public abstract class User {
     @NotBlank(message="Name is mandatory")
     private String name;
 
-    @Pattern(regexp="^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#&()–[{}]:;',?/*~$^+=<>]).{8,20}$",message="length must be 8")
+    @Pattern(regexp="(.)*.{8,20}$",message="length must be 8")
     @NotBlank(message="Password is mandatory")
     private String password; //password that will be stored as hash
 
