@@ -1,3 +1,0 @@
-[submodule "movieRecomander/ml"]
-	path = movieRecomander/ml
-	url = https://github.com/RaduStefan999/Movie-recommendation_ML
