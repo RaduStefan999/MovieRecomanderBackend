@@ -1,6 +1,9 @@
 package com.movierecomander.backend.security.config;
 
 import com.movierecomander.backend.security.auth.UserAuthService;
+import com.movierecomander.backend.security.handler.RestAccessDeniedHandler;
+import com.movierecomander.backend.security.handler.RestAuthenticationEntryPoint;
+import com.movierecomander.backend.security.handler.RestAuthenticationFailureHandler;
 import com.movierecomander.backend.security.jwt.JwtAuthenticationFilter;
 import com.movierecomander.backend.security.jwt.JwtConfig;
 import com.movierecomander.backend.security.jwt.JwtTokenVerifier;
@@ -13,6 +16,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.AuthenticationFilter;
 
 import javax.crypto.SecretKey;
 
@@ -37,14 +41,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        var jwtAuthenticationFilter = new JwtAuthenticationFilter(authenticationManager(), jwtConfig, secretKey);
-        jwtAuthenticationFilter.setFilterProcessesUrl("/api/v1/login");
 
         http.cors();
         http.csrf().disable();
-        http.sessionManagement().sessionCreationPolicy(STATELESS);
+        http.sessionManagement()
+                .sessionCreationPolicy(STATELESS)
+                .and()
+                .exceptionHandling()
+                .accessDeniedHandler(accessDeniedHandler())
+                .authenticationEntryPoint(authenticationEntryPoint());
         http
-                .addFilter(jwtAuthenticationFilter)
+                .addFilter(jwtAuthenticationFilter())
                 .addFilterAfter(new JwtTokenVerifier(secretKey, jwtConfig), JwtAuthenticationFilter.class)
                 .authorizeRequests()
                 .antMatchers("/api/v1/login", "/api/v1/user/register").permitAll()
@@ -58,10 +65,34 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
-    public DaoAuthenticationProvider daoAuthenticationProvider() {
+    protected DaoAuthenticationProvider daoAuthenticationProvider() {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
         provider.setPasswordEncoder(passwordEncoder);
         provider.setUserDetailsService(userAuthService);
         return provider;
+    }
+
+    @Bean
+    protected JwtAuthenticationFilter jwtAuthenticationFilter() throws Exception {
+        final JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(authenticationManager(),
+                jwtConfig, secretKey);
+        jwtAuthenticationFilter.setFilterProcessesUrl("/api/v1/login");
+        jwtAuthenticationFilter.setAuthenticationFailureHandler(authenticationFailureHandler());
+        return jwtAuthenticationFilter;
+    }
+
+    @Bean
+    protected RestAccessDeniedHandler accessDeniedHandler() {
+        return new RestAccessDeniedHandler();
+    }
+
+    @Bean
+    protected RestAuthenticationEntryPoint authenticationEntryPoint() {
+        return new RestAuthenticationEntryPoint();
+    }
+
+    @Bean
+    protected RestAuthenticationFailureHandler authenticationFailureHandler(){
+        return new RestAuthenticationFailureHandler();
     }
 }
