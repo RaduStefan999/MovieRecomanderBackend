@@ -16,12 +16,13 @@ public class UserAuthService implements UserDetailsService {
         this.userAuthDao = userAuthDao;
     }
 
+    //the username by which we do the authentication is the email
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         return userAuthDao
-                .selectUserAuthByUsername(username)
+                .selectUserAuthByEmail(email)
                 .orElseThrow(
-                        () -> new UsernameNotFoundException(String.format("Username %s not found", username))
+                        () -> new UsernameNotFoundException(String.format("Email %s not found", email))
                 );
     }
 }

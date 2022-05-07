@@ -1,18 +1,17 @@
 package com.movierecomander.backend.security.jwt;
 
 public class AuthenticationRequest {
-    private String username;
+    private String email;
     private String password;
 
-    public AuthenticationRequest() {
-    }
+    public AuthenticationRequest() {}
 
-    public String getUsername() {
-        return username;
+    public String getEmail() {
+        return email;
     }
 
     public void setEmail(String email) {
-        this.username = email;
+        this.email = email;
     }
 
     public String getPassword() {

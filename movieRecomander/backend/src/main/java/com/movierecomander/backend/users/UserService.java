@@ -21,11 +21,11 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    static Specification<User> userNameContains(String name) {
-        return (user, cq, cb) -> cb.like(user.get("name"), "%" + name + "%");
+    static Specification<User> userEmailContains(String email) {
+        return (user, cq, cb) -> cb.like(user.get("email"), "%" + email + "%");
     }
 
-    public List<User> getAppUser(String username) {
-        return userRepository.findAll(userNameContains(username));
+    public List<User> getAppUserByEmail(String email) {
+        return userRepository.findAll(userEmailContains(email));
     }
 }
