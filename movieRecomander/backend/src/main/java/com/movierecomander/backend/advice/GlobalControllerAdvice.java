@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
@@ -21,4 +22,11 @@ public class GlobalControllerAdvice extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(new ErrorsAdvice("Validation Error", exception.getBindingResult().toString(),
                 errorsSummary), HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler(BusinessException.class)
+    private ResponseEntity<ErrorsAdvice> handleBusinessException(BusinessException exception) {
+        return new ResponseEntity<>(new ErrorsAdvice(exception.getErrorType(), exception.getMessage(),
+                exception.getMessageArray()), HttpStatus.CONFLICT);
+    }
+
 }

@@ -1,5 +1,6 @@
 package com.movierecomander.backend.users.user;
 
+import com.movierecomander.backend.advice.BusinessException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -33,7 +34,7 @@ public class AppUserService {
                 .findAppUserByEmail(appUser.getEmail());
 
         if (appUserOptional.isPresent()) {
-            throw new IllegalStateException("email taken");
+            throw new BusinessException("email taken", "Register error");
         }
 
         appUser.setPassword(passwordEncoder.encode(appUser.getPassword()));

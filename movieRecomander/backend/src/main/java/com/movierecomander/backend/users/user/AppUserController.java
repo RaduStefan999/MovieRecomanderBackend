@@ -31,7 +31,6 @@ public class AppUserController {
     public void registerUser(@Valid @RequestBody AppUser appUser)
     {
         appUserService.addNewAppUser(appUser);
-        System.out.println(appUser);
     }
 
     @DeleteMapping(path = "{appUserId}")
