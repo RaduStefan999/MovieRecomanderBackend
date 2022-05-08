@@ -26,14 +26,14 @@ public class FileController {
         this.fileService = fileService;
     }
 
-    @PostMapping("/upload")
+    @PostMapping
     @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     @ResponseStatus(code = HttpStatus.CREATED, reason = "UPLOAD")
     public void upload(@RequestParam("file")MultipartFile multipartFile) {
         fileService.upload(multipartFile);
     }
 
-    @GetMapping("/download/{fileIdName}")
+    @GetMapping("/{fileIdName}")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
     @ResponseStatus(code = HttpStatus.OK, reason = "DOWNLOAD")
     public ResponseEntity<Resource> download(@PathVariable String fileIdName) {
@@ -49,7 +49,7 @@ public class FileController {
                 .body(new ByteArrayResource(foundFileOnServer.get().getFileData()));
     }
 
-    @GetMapping("/delete/{fileIdName}")
+    @DeleteMapping("/{fileIdName}")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
     @ResponseStatus(code = HttpStatus.NO_CONTENT, reason = "DELETED")
     public void delete(@PathVariable String fileIdName) {

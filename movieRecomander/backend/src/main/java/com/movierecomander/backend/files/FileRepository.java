@@ -6,5 +6,4 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import java.util.List;
 
 public interface FileRepository extends JpaRepository<UploadedFile, Long>, JpaSpecificationExecutor<UploadedFile>  {
-    List<UploadedFile> findByFileIdName(String name);
 }

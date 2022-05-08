@@ -1,6 +1,8 @@
 package com.movierecomander.backend.files;
 
+import com.movierecomander.backend.users.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -44,8 +46,12 @@ public class FileService {
         return fileRepository.findByFileIdName(fileIdName).stream().findFirst();
     }
 
+    static Specification<UploadedFile> fileFileIDNameContains(String fileIdName) {
+        return (uploadFile, cq, cb) -> cb.like(uploadFile.get("fileIdName"), "%" + fileIdName + "%");
+    }
+
     public void delete(String fileIdName) {
-        var fileOnServer = fileRepository.findByFileIdName(fileIdName).stream().findFirst();
+        var fileOnServer = fileRepository.findAll(fileFileIDNameContains(fileIdName)).stream().findFirst();
 
         if (fileOnServer.isPresent()) {
             fileOnServer.get().deleteFileData();
