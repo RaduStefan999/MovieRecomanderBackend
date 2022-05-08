@@ -20,12 +20,14 @@ public class MovieController {
 
     @GetMapping
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
+    @ResponseStatus(code = HttpStatus.OK, reason = "READ")
     public List<Movie> get(){
         return movieRepository.findAll();
     }
 
     @GetMapping("/{id}")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
+    @ResponseStatus(code = HttpStatus.OK, reason = "READ")
     public ResponseEntity<Movie> getByID(@PathVariable("id") Long id){
         if(movieRepository.findById(id).isEmpty()){
             return ResponseEntity.notFound().build();
@@ -42,6 +44,7 @@ public class MovieController {
 
     @PutMapping("/{id}")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
+    @ResponseStatus(code = HttpStatus.NO_CONTENT, reason = "UPDATED")
     public ResponseEntity<Boolean> updateMovie(@PathVariable("id") Long id, @RequestBody Movie movie){
         var foundMovie = movieRepository.findById(id);
         if(foundMovie.isEmpty()){
@@ -54,6 +57,7 @@ public class MovieController {
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
+    @ResponseStatus(code = HttpStatus.NO_CONTENT, reason = "DELETED")
     public void deleteMovie(@PathVariable("id") Long id){
         movieRepository.deleteById(id);
     }
