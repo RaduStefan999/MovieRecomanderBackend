@@ -42,12 +42,12 @@ public class FileService {
         }
     }
 
-    public Optional<UploadedFile> download(String fileIdName) {
-        return fileRepository.findByFileIdName(fileIdName).stream().findFirst();
-    }
-
     static Specification<UploadedFile> fileFileIDNameContains(String fileIdName) {
         return (uploadFile, cq, cb) -> cb.like(uploadFile.get("fileIdName"), "%" + fileIdName + "%");
+    }
+
+    public Optional<UploadedFile> download(String fileIdName) {
+        return fileRepository.findAll(fileFileIDNameContains(fileIdName)).stream().findFirst();
     }
 
     public void delete(String fileIdName) {
