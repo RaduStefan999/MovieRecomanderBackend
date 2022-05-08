@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/movie/base")
+@RequestMapping("/api/v1/movies")
 public class MovieController {
     private MovieRepository movieRepository;
 
@@ -19,7 +19,7 @@ public class MovieController {
     }
 
     @GetMapping
-    //@PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
     public List<Movie> get(){
         return movieRepository.findAll();
     }
