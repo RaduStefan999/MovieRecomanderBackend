@@ -1,6 +1,7 @@
 package com.movierecommender.backend.users.admin;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,8 +19,7 @@ public class AppAdminController {
     }
 
     @GetMapping
-    public List<AppAdmin> getAdmins()
-    {
-        return appAdminService.getAdmins();
+    public ResponseEntity<List<AppAdmin>> getAdmins() {
+        return ResponseEntity.ok(appAdminService.getAdmins());
     }
 }

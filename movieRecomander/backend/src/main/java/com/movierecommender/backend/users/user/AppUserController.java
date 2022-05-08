@@ -1,5 +1,6 @@
 package com.movierecommender.backend.users.user;
 
+import com.movierecommender.backend.advice.BusinessException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,41 +23,33 @@ public class AppUserController {
 
     @GetMapping
     @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
-    @ResponseStatus(code = HttpStatus.OK, reason = "READ")
-    public List<AppUser> getUsers()
-    {
-        return appUserService.getAppUsers();
+    public ResponseEntity<List<AppUser>> getUsers() {
+        return ResponseEntity.ok(appUserService.getAppUsers());
     }
 
     @PostMapping(path = "register")
     @ResponseStatus(code = HttpStatus.CREATED, reason = "CREATED")
-    public void registerUser(@Valid @RequestBody AppUser appUser)
-    {
+    public void registerUser(@Valid @RequestBody AppUser appUser) {
         appUserService.addNewAppUser(appUser);
     }
 
     @GetMapping("/{id}")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
-    @ResponseStatus(code = HttpStatus.OK, reason = "READ")
-    public ResponseEntity<Optional<AppUser>> read(@PathVariable("id") Long id) {
+    public ResponseEntity<AppUser> read(@PathVariable("id") Long id) {
         Optional<AppUser> foundUser = appUserService.read(id);
-        if (foundUser == null) {
-            return ResponseEntity.notFound().build();
-        } else {
-            return ResponseEntity.ok(foundUser);
+        if (foundUser.isEmpty()) {
+            throw new BusinessException("User not found", "Invalid data", HttpStatus.NOT_FOUND);
         }
+        return ResponseEntity.ok(foundUser.get());
     }
 
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @ResponseStatus(code = HttpStatus.NO_CONTENT, reason = "UPDATED")
-    public ResponseEntity<Boolean> update(@RequestBody AppUser appUser, @PathVariable Long id) {
-
-        AppUser updatedUser = appUserService.updateService(id, appUser);
-        if (updatedUser==null) {
-            return ResponseEntity.notFound().build();
+    public void update(@RequestBody AppUser appUser, @PathVariable Long id) {
+        if (!appUserService.updateService(id, appUser)) {
+            throw new BusinessException("User not found", "Invalid data", HttpStatus.NOT_FOUND);
         }
-        return ResponseEntity.ok(true);
     }
 
     @DeleteMapping(path = "{appUserId}")

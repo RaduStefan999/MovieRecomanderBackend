@@ -2,6 +2,7 @@ package com.movierecommender.backend.users.user;
 
 import com.movierecommender.backend.advice.BusinessException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -30,7 +31,7 @@ public class AppUserService {
                 .findAppUserByEmail(appUser.getEmail());
 
         if (appUserOptional.isPresent()) {
-            throw new BusinessException("email taken", "Register error");
+            throw new BusinessException("email taken", "Register error", HttpStatus.CONFLICT);
         }
 
         appUser.setPassword(passwordEncoder.encode(appUser.getPassword()));
@@ -51,13 +52,13 @@ public class AppUserService {
     }
 
 
-    public AppUser updateService(Long id,AppUser appUser) {
+    public boolean updateService(Long id,AppUser appUser) {
         var foundUser = appUserRepository.findAppUserById(id);
         if (foundUser.isEmpty()) {
-            return null;
+            return false;
         }
         foundUser.get().update(appUser,id);
         appUserRepository.save(appUser);
-        return appUser;
+        return true;
     }
 }

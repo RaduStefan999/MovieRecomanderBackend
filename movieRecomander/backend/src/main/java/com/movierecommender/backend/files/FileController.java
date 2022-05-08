@@ -1,6 +1,7 @@
 package com.movierecommender.backend.files;
 
 
+import com.movierecommender.backend.advice.BusinessException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
@@ -28,9 +29,7 @@ public class FileController {
     @PostMapping
     @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     @ResponseStatus(code = HttpStatus.CREATED, reason = "UPLOAD")
-    public void upload(@RequestParam("file")MultipartFile multipartFile) {
-        fileService.upload(multipartFile);
-    }
+    public void upload(@RequestParam("file")MultipartFile multipartFile) { fileService.upload(multipartFile); }
 
     @GetMapping("/{fileIdName}")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
@@ -38,7 +37,7 @@ public class FileController {
         Optional<UploadedFile> foundFileOnServer = fileService.download(fileIdName);
 
         if (foundFileOnServer.isEmpty()) {
-            return ResponseEntity.notFound().build();
+            throw new BusinessException("File not found", "Invalid data", HttpStatus.NOT_FOUND);
         }
 
         return ResponseEntity.ok()
@@ -48,9 +47,7 @@ public class FileController {
     }
 
     @DeleteMapping("/{fileIdName}")
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     @ResponseStatus(code = HttpStatus.NO_CONTENT, reason = "DELETED")
-    public void delete(@PathVariable String fileIdName) {
-        fileService.delete(fileIdName);
-    }
+    public void delete(@PathVariable String fileIdName) { fileService.delete(fileIdName); }
 }

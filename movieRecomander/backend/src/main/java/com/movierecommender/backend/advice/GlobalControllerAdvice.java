@@ -26,7 +26,7 @@ public class GlobalControllerAdvice extends ResponseEntityExceptionHandler {
     @ExceptionHandler(BusinessException.class)
     private ResponseEntity<ErrorsAdvice> handleBusinessException(BusinessException exception) {
         return new ResponseEntity<>(new ErrorsAdvice(exception.getErrorType(), exception.getMessage(),
-                exception.getMessageArray()), HttpStatus.CONFLICT);
+                exception.getMessageArray()), exception.getHttpStatus());
     }
 
 }

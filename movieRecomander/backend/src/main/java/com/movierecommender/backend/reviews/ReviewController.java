@@ -1,5 +1,6 @@
 package com.movierecommender.backend.reviews;
 
+import com.movierecommender.backend.advice.BusinessException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,9 +21,8 @@ public class ReviewController {
 
     @GetMapping("/")
     @PreAuthorize("hasAnyRole('ROLE_USER')")
-    @ResponseStatus(code = HttpStatus.OK, reason = "READ")
-    public List<Review> get() {
-        return reviewRepository.findAll();
+    public ResponseEntity<List<Review>> get() {
+        return ResponseEntity.ok(reviewRepository.findAll());
     }
 
     @PostMapping("/")
@@ -34,42 +34,33 @@ public class ReviewController {
 
     @GetMapping("/{id}")
     @PreAuthorize("hasAnyRole('ROLE_USER')")
-    @ResponseStatus(code = HttpStatus.OK, reason = "READ")
     public ResponseEntity<Review> read(@PathVariable("id") Long id) {
         var foundReview = reviewRepository.findById(id);
-
         if (foundReview.isEmpty()) {
-            return ResponseEntity.notFound().build();
+            throw new BusinessException("Review not found", "Invalid data", HttpStatus.NOT_FOUND);
         }
-
         return ResponseEntity.ok(foundReview.get());
     }
 
     @PutMapping("/{id}")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     @ResponseStatus(code = HttpStatus.NO_CONTENT, reason = "UPDATED")
-    public ResponseEntity<Boolean> update(@PathVariable("id") Long id, @RequestBody Review review) {
+    public void update(@PathVariable("id") Long id, @RequestBody Review review) {
         var foundReview = reviewRepository.findById(id);
-
         if (foundReview.isEmpty()) {
-            return ResponseEntity.notFound().build();
+            throw new BusinessException("Review not found", "Invalid data", HttpStatus.NOT_FOUND);
         }
-
         foundReview.get().update(review);
-        return ResponseEntity.ok(true);
     }
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     @ResponseStatus(code = HttpStatus.NO_CONTENT, reason = "DELETED")
-    public ResponseEntity<Boolean> delete(@PathVariable("id") Long id) {
+    public void delete(@PathVariable("id") Long id) {
         var foundReview = reviewRepository.findById(id);
-
         if (foundReview.isEmpty()) {
-            return ResponseEntity.notFound().build();
+            throw new BusinessException("Review not found", "Invalid data", HttpStatus.NOT_FOUND);
         }
-
         reviewRepository.delete(foundReview.get());
-        return ResponseEntity.ok(true);
     }
 }

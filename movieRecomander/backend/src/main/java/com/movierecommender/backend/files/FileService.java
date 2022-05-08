@@ -1,7 +1,9 @@
 package com.movierecommender.backend.files;
 
+import com.movierecommender.backend.advice.BusinessException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -38,6 +40,7 @@ public class FileService {
         }
         catch (IOException e) {
             e.printStackTrace();
+            throw new BusinessException("Could not write file", "IO exception", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -55,6 +58,9 @@ public class FileService {
         if (fileOnServer.isPresent()) {
             fileOnServer.get().deleteFileData();
             fileRepository.delete(fileOnServer.get());
+        }
+        else {
+            throw new BusinessException("Did not find file to delete", "Invalid data", HttpStatus.NOT_FOUND);
         }
     }
 }
