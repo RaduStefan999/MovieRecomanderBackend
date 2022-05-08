@@ -6,13 +6,13 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.net.http.HttpHeaders;
 import java.util.Optional;
 
 @RestController
@@ -35,7 +35,7 @@ public class FileController {
 
     @GetMapping("/download/{fileIdName}")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
-    @ResponseStatus(code = HttpStatus.OK, reason = "UPLOAD")
+    @ResponseStatus(code = HttpStatus.OK, reason = "DOWNLOAD")
     public ResponseEntity<Resource> download(@PathVariable String fileIdName) {
         Optional<UploadedFile> foundFileOnServer = fileService.download(fileIdName);
 
@@ -45,12 +45,13 @@ public class FileController {
 
         return ResponseEntity.ok()
                 .contentType(MediaType.parseMediaType(foundFileOnServer.get().getFileType()))
-                .header("Content-Disposition", "attachment; filename= "+foundFileOnServer.get().getFileName())
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename= " + foundFileOnServer.get().getFileName())
                 .body(new ByteArrayResource(foundFileOnServer.get().getFileData()));
     }
 
     @GetMapping("/delete/{fileIdName}")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
+    @ResponseStatus(code = HttpStatus.NO_CONTENT, reason = "DELETED")
     public void delete(@PathVariable String fileIdName) {
         fileService.delete(fileIdName);
     }

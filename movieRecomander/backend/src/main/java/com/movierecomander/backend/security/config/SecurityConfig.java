@@ -1,9 +1,9 @@
 package com.movierecomander.backend.security.config;
 
 import com.movierecomander.backend.security.auth.UserAuthService;
-import com.movierecomander.backend.security.handler.RestAccessDeniedHandler;
-import com.movierecomander.backend.security.handler.RestAuthenticationEntryPoint;
-import com.movierecomander.backend.security.handler.RestAuthenticationFailureHandler;
+import com.movierecomander.backend.security.handlers.RestAccessDeniedHandler;
+import com.movierecomander.backend.security.handlers.RestAuthenticationEntryPoint;
+import com.movierecomander.backend.security.handlers.RestAuthenticationFailureHandler;
 import com.movierecomander.backend.security.jwt.JwtAuthenticationFilter;
 import com.movierecomander.backend.security.jwt.JwtConfig;
 import com.movierecomander.backend.security.jwt.JwtTokenVerifier;
@@ -16,7 +16,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.authentication.AuthenticationFilter;
 
 import javax.crypto.SecretKey;
 

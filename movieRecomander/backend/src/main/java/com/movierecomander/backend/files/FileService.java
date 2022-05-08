@@ -27,10 +27,10 @@ public class FileService {
         try {
             byte[] data = file.getBytes();
             int timestamp = Clock.systemDefaultZone().instant().getNano();
-            Path filePathOnServer = Paths.get(fileConfig.getFileStorePath() + timestamp);
+            Path filePathOnServer = Paths.get(fileConfig.getFileStorePath() + "uploaded_" + timestamp);
             Files.write(filePathOnServer, data);
 
-            UploadedFile uploadedFile = new UploadedFile(filePathOnServer.toString(), "file" + timestamp,
+            UploadedFile uploadedFile = new UploadedFile(filePathOnServer.toString(), "file_" + timestamp,
                     file.getName(), file.getContentType());
 
             fileRepository.save(uploadedFile);
