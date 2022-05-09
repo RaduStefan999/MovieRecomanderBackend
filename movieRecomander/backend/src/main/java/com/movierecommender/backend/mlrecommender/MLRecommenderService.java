@@ -36,7 +36,7 @@ public class MLRecommenderService {
                     (id -> movieRepository.existsById(id)).map(id -> movieRepository.getById(id))
                     .toList();
 
-            if (movieRepository.count() != 0) {
+            if (recommendedMovies.size() != 0) {
                 return recommendedMovies;
             }
 
