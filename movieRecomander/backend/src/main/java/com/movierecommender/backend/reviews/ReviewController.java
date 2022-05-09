@@ -19,13 +19,13 @@ public class ReviewController {
         this.reviewRepository = reviewRepository;
     }
 
-    @GetMapping("/")
+    @GetMapping
     @PreAuthorize("hasAnyRole('ROLE_USER')")
     public ResponseEntity<List<Review>> get() {
         return ResponseEntity.ok(reviewRepository.findAll());
     }
 
-    @PostMapping("/")
+    @PostMapping
     @PreAuthorize("hasAnyRole('ROLE_USER')")
     @ResponseStatus(code = HttpStatus.CREATED, reason = "CREATED")
     public void post(@RequestBody Review review) {
