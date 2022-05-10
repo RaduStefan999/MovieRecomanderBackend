@@ -1,5 +1,7 @@
 package com.movierecommender.backend.reviews;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.movierecommender.backend.movies.movie.Movie;
 import com.movierecommender.backend.users.user.AppUser;
 import org.hibernate.annotations.GenericGenerator;
@@ -17,10 +19,12 @@ public class Review {
 
     @ManyToOne
     @JoinColumn(name = "userId")
+    @JsonIgnore
     AppUser appUser;
 
     @ManyToOne
     @JoinColumn(name = "movieId")
+    @JsonIgnore
     Movie movie;
 
     private Integer reviewValue;

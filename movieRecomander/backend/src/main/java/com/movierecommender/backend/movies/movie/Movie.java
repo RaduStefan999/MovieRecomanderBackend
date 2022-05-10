@@ -176,11 +176,11 @@ public class Movie {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Movie movie = (Movie) o;
-        return id.equals(movie.id) && name.equals(movie.name) && Objects.equals(summary, movie.summary) && Objects.equals(description, movie.description) && Objects.equals(ageRestriction, movie.ageRestriction) && Objects.equals(movieGenres, movie.movieGenres) && releaseDate.equals(movie.releaseDate) && Objects.equals(duration, movie.duration) && Objects.equals(trailerLink, movie.trailerLink) && movieLink.equals(movie.movieLink) && Objects.equals(ratings, movie.ratings) && Objects.equals(comments, movie.comments);
+        return id.equals(movie.id) && name.equals(movie.name) && Objects.equals(summary, movie.summary) && Objects.equals(description, movie.description) && Objects.equals(ageRestriction, movie.ageRestriction) && Objects.equals(movieGenres, movie.movieGenres) && releaseDate.equals(movie.releaseDate) && Objects.equals(duration, movie.duration) && Objects.equals(trailerLink, movie.trailerLink) && movieLink.equals(movie.movieLink);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, summary, description, ageRestriction, movieGenres, releaseDate, duration, trailerLink, movieLink, ratings, comments);
+        return Objects.hash(id, name, summary, description, ageRestriction, movieGenres, releaseDate, duration, trailerLink, movieLink);
     }
 }
