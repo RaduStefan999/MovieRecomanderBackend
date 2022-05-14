@@ -1,6 +1,8 @@
 package com.movierecommender.backend.movies.movie;
 
 import com.movierecommender.backend.advice.BusinessException;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+//@Api( tags = "Movies")
 @RequestMapping("/api/v1/movies")
 public class MovieController {
     private MovieRepository movieRepository;
@@ -19,6 +22,7 @@ public class MovieController {
         this.movieRepository = movieRepository;
     }
 
+  //  @ApiOperation(value = "This method is used to get the movies.")
     @GetMapping
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
     public ResponseEntity<List<Movie>> get(){
