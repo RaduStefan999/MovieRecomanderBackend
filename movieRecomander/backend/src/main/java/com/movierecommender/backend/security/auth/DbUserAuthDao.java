@@ -20,6 +20,6 @@ public class DbUserAuthDao implements UserAuthDao {
 
     @Override
     public Optional<UserAuth> selectUserAuthByEmail(String email) {
-        return userService.getAppUserByEmail(email).stream().findFirst().map(user -> new UserAuth(user));
+        return userService.getUserByEmail(email).stream().findFirst().map(user -> new UserAuth(user));
     }
 }

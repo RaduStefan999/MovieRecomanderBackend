@@ -24,7 +24,7 @@ public class UserService {
         return (user, cq, cb) -> cb.like(user.get("email"), "%" + email + "%");
     }
 
-    public List<User> getAppUserByEmail(String email) {
+    public List<User> getUserByEmail(String email) {
         return userRepository.findAll(userEmailContains(email));
     }
 }
