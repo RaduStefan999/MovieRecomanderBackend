@@ -3,6 +3,7 @@ package com.movierecommender.backend.movies.moviesearch;
 
 import com.movierecommender.backend.movies.movie.Movie;
 import com.movierecommender.backend.movies.movie.MovieRepository;
+import com.movierecommender.backend.movies.moviegenre.MovieGenre;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -24,7 +25,11 @@ public class MovieSearchService {
         return (movie, cq, cb) -> cb.like(movie.get("name"), "%" + name + "%");
     }
 
-    public List<Movie> getMovieByTag(String movieName) {
+    public List<Movie> getMovieByName(String movieName) {
         return movieRepository.findAll(movieNameContains(movieName));
     }
+
+    /**public List<Movie> getMovieByGenre(List<MovieGenre> genres){
+        
+    }*/
 }

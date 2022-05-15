@@ -21,7 +21,7 @@ public class MovieSearchController {
 
     @GetMapping("/{movieName}")
     @PreAuthorize("hasAnyRole('ROLE_USER')")
-    public ResponseEntity<List<Movie>> searchMovieByTag(@PathVariable String movieName){
-        return ResponseEntity.ok(movieSearchService.getMovieByTag(movieName));
+    public ResponseEntity<List<Movie>> getMovieByName(@PathVariable String movieName){
+        return ResponseEntity.ok(movieSearchService.getMovieByName(movieName));
     }
 }
