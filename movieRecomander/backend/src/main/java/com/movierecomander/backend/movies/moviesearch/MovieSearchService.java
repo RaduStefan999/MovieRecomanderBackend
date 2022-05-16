@@ -36,7 +36,7 @@ public class MovieSearchService {
         return movieRepository.findAll(movieNameContains(movieName));
     }
 
-    private List getGenres(List<String> genres){
+    private List<MovieGenre> getGenres(List<String> genres){
         CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
         CriteriaQuery criteriaQuery = criteriaBuilder.createQuery(MovieGenre.class);
         Root<MovieGenre> root = criteriaQuery.from(MovieGenre.class);
