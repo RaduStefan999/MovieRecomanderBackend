@@ -2,13 +2,14 @@ package com.movierecomander.backend.movies.moviesearch;
 
 import com.movierecomander.backend.movies.movie.Movie;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping(path = "api/v1/movie/search")
+@RequestMapping(path = "api/v1/movies/search")
 public class MovieSearchController {
     private final MovieSearchService movieSearchService;
 
@@ -17,10 +18,15 @@ public class MovieSearchController {
         this.movieSearchService = movieSearchService;
     }
 
-    @GetMapping("/{movieName}")
+    @GetMapping("/name/{movieName}")
     @PreAuthorize("hasAnyRole('ROLE_USER')")
-    public List<Movie> searchMovieByTag(@PathVariable String movieName){
-        System.out.println(movieName);
-        return movieSearchService.getMovieByTag(movieName);
+    public ResponseEntity<List<Movie>> getMovieByName(@PathVariable String movieName){
+        return ResponseEntity.ok(movieSearchService.getMovieByName(movieName));
+    }
+
+    @GetMapping("/genre/{movieGenres}")
+    @PreAuthorize("hasAnyRole('ROLE_USER')")
+    public ResponseEntity<List<Movie>> searchMovieByGenres(List<String> movieGenres){
+        return ResponseEntity.ok(movieSearchService.getMovieByGenres(movieGenres));
     }
 }
