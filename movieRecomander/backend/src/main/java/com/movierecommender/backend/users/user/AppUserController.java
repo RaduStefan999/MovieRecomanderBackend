@@ -13,7 +13,7 @@ import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 
-@RestController(value = "/users")
+@RestController
 @RequestMapping(path = "api/v1/users")
 public class AppUserController {
     private final AppUserService appUserService;

@@ -54,7 +54,7 @@ public class MLRecommenderService {
         WebClient mlMicroservice = WebClient.create(mlRecommenderConfig.getMlURI());
 
         return mlMicroservice.get()
-                .uri("/ML/{userId}/{nrOfMovies}", userId, nrOfMovies)
+                .uri(mlRecommenderConfig.getMlURI() + "/prediction?user_id=" + userId + "&movies_nr=" + nrOfMovies)
                 .retrieve()
                 .bodyToMono(new ParameterizedTypeReference<Optional<List<Long>>>() {});
     }
