@@ -26,11 +26,7 @@ public class MovieSearchController {
 
     @GetMapping("/genre/{movieGenres}")
     @PreAuthorize("hasAnyRole('ROLE_USER')")
-<<<<<<< Updated upstream:movieRecomander/backend/src/main/java/com/movierecomander/backend/movies/moviesearch/MovieSearchController.java
-    public ResponseEntity<List<Movie>> searchMovieByGenres(List<String> movieGenres){
-=======
     public ResponseEntity<List<Movie>> searchMovieByGenres(@PathVariable List<String> movieGenres){
->>>>>>> Stashed changes:movieRecomander/backend/src/main/java/com/movierecommender/backend/movies/moviesearch/MovieSearchController.java
         return ResponseEntity.ok(movieSearchService.getMovieByGenres(movieGenres));
     }
 }
