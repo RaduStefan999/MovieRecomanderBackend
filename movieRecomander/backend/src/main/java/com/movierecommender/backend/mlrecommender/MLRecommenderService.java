@@ -2,22 +2,28 @@ package com.movierecommender.backend.mlrecommender;
 
 import com.movierecommender.backend.movies.movie.Movie;
 import com.movierecommender.backend.movies.movie.MovieRepository;
+import org.hibernate.Session;
+import org.hibernate.annotations.QueryHints;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
-import org.springframework.web.reactive.function.client.WebClient;
-import reactor.core.publisher.Mono;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.time.Duration;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class MLRecommenderService {
 
     MLRecommenderConfig mlRecommenderConfig;
     MovieRepository movieRepository;
+
+    @PersistenceContext
+    private EntityManager entityManager;
 
     @Autowired
     public MLRecommenderService(MLRecommenderConfig mlRecommenderConfig, MovieRepository movieRepository) {
@@ -26,9 +32,14 @@ public class MLRecommenderService {
     }
 
     public List<Movie> getRecommendation(long userId, int nrOfMovies) {
-        Optional<List<Long>> movieIds = this.getMlRecommendation(userId, nrOfMovies)
-                .timeout(Duration.ofSeconds(mlRecommenderConfig.getMlTimeout()))
-                .onErrorReturn(Optional.empty()).block();
+        Session session = entityManager.unwrap(Session.class);
+
+        Optional<List<Long>> movieIds = this.getMlRecommendation(userId, nrOfMovies);
+
+        var x = (Movie) entityManager.createQuery("FROM Movie m WHERE m.id = :id")
+                .setParameter("id", 1L)
+                .setHint(QueryHints.PASS_DISTINCT_THROUGH, false)
+                .getSingleResult();
 
         if (movieIds != null && movieIds.isPresent()) {
 
@@ -50,13 +61,19 @@ public class MLRecommenderService {
         return getFallbackRecommendation(userId, nrOfMovies);
     }
 
-    private Mono<Optional<List<Long>>> getMlRecommendation(long userId, int nrOfMovies) {
-        WebClient mlMicroservice = WebClient.create(mlRecommenderConfig.getMlURI());
+    private Optional<List<Long>> getMlRecommendation(long userId, int nrOfMovies) {
+        System.out.println(mlRecommenderConfig.getMlURI() + "/" + userId + "/" + nrOfMovies);
+        return this.getRestTemplateBuilder().build().exchange(
+                mlRecommenderConfig.getMlURI() + "/ML/" + userId + "/" + nrOfMovies,
+                HttpMethod.GET,
+                null,
+                new ParameterizedTypeReference<Optional<List<Long>>>() {}).getBody();
+    }
 
-        return mlMicroservice.get()
-                .uri("/ML/{userId}/{nrOfMovies}", userId, nrOfMovies)
-                .retrieve()
-                .bodyToMono(new ParameterizedTypeReference<Optional<List<Long>>>() {});
+    private RestTemplateBuilder getRestTemplateBuilder() {
+        return new RestTemplateBuilder()
+            .setConnectTimeout(Duration.ofSeconds(mlRecommenderConfig.getMlTimeout()))
+            .setReadTimeout(Duration.ofSeconds(mlRecommenderConfig.getMlTimeout()));
     }
 
     private List<Movie> getFallbackRecommendation(long userId, int nrOfMovies) {
