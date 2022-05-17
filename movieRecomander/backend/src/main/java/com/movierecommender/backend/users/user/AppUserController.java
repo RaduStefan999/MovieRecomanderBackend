@@ -1,6 +1,8 @@
 package com.movierecommender.backend.users.user;
 
 import com.movierecommender.backend.advice.BusinessException;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,7 +14,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping(path = "api/v1/user")
+@RequestMapping(path = "api/v1/users")
 public class AppUserController {
     private final AppUserService appUserService;
 
@@ -21,6 +23,7 @@ public class AppUserController {
         this.appUserService = appUserService;
     }
 
+    @ApiOperation(value = "This method is used to get the users.")      // description added
     @GetMapping
     @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     public ResponseEntity<List<AppUser>> getUsers() {
