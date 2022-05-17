@@ -10,9 +10,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-@RestController(value = "/admins")  // value required
-@Api(tags = "Admins")               // tag required
-@RequestMapping(path = "api/v1/admin")
+@RestController
+@RequestMapping(path = "api/v1/admins")
 public class AppAdminController {
     private final AppAdminService appAdminService;
 

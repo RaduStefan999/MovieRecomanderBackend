@@ -21,6 +21,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.crypto.SecretKey;
 
+import java.lang.reflect.Array;
+import java.util.Arrays;
+import java.util.stream.Stream;
+
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 
 @Configuration
@@ -28,13 +32,18 @@ import static org.springframework.security.config.http.SessionCreationPolicy.STA
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    // AUTH_WHITELIST added
-    private static final String[] AUTH_WHITELIST = {
+    private static final String[] SWAGGER_AUTH_WHITELIST = {
             "/swagger-resources/**",
-            "/swagger-ui.html",
-            "/v2/api-docs",
-            "/webjars/**"
+            "/webjars/**",
+            "/swagger-ui*",
+            "/swagger-ui/**/*.*",
+            "/v2/api-docs/**"
     };
+    private static final String[] APP_AUTH_WHITELIST = {
+            "/api/v1/login",
+            "/api/v1/users/register"
+    };
+
     private final PasswordEncoder passwordEncoder;
     private final UserAuthService userAuthService;
     private final SecretKey secretKey;
@@ -63,8 +72,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .addFilter(jwtAuthenticationFilter())
                 .addFilterAfter(new JwtTokenVerifier(secretKey, jwtConfig), JwtAuthenticationFilter.class)
                 .authorizeRequests()
-                .antMatchers("/api/v1/login", "/api/v1/user/register",
-                        "/swagger-ui*", "/swagger-ui/**/*.*", "/v3/api-docs/**", "/documentation").permitAll()
+                .antMatchers(
+                        Stream.concat(Arrays.stream(SWAGGER_AUTH_WHITELIST), Arrays.stream(APP_AUTH_WHITELIST))
+                                .toArray(size -> (String[]) Array.newInstance(String.class, size))
+                )
+                .permitAll()
                 .anyRequest()
                 .authenticated();
     }
@@ -106,9 +118,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return new RestAuthenticationFailureHandler();
     }
 
-    // AUTH_WHITELIST added
     @Override
     public void configure(WebSecurity web) throws Exception {
-        web.ignoring().antMatchers(AUTH_WHITELIST);
+        web.ignoring().antMatchers(SWAGGER_AUTH_WHITELIST);
     }
 }

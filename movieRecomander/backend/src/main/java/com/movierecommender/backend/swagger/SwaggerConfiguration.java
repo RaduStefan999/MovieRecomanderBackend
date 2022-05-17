@@ -1,4 +1,4 @@
-package com.movierecommender.backend.security.config;
+package com.movierecommender.backend.swagger;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,19 +13,18 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-// added SwaggerConfiguration
 @Configuration
 public class SwaggerConfiguration {
 
     public static final String AUTHORIZATION_HEADER = "Authorization";
 
     private ApiInfo apiInfo() {
-        return new ApiInfo("My REST API",
-                "Some custom description of API.",
+        return new ApiInfo("MovieRecommender",
+                "MovieRecommender API",
                 "1.0",
-                "Terms of service",
-                new Contact("Sallo Szrajbman", "www.baeldung.com", "salloszraj@gmail.com"),
-                "License of API",
+                "Don't break anything please",
+                new Contact("B4 group", "www.b4.com", "b4@mail.com"),
+                "B4 Licence",
                 "API license URL",
                 Collections.emptyList());
     }
@@ -34,8 +33,8 @@ public class SwaggerConfiguration {
     public Docket api() {
         return new Docket(DocumentationType.SWAGGER_2)
                 .apiInfo(apiInfo())
-                .securityContexts(Arrays.asList(securityContext()))
-                .securitySchemes(Arrays.asList(apiKey()))
+                .securityContexts(List.of(securityContext()))
+                .securitySchemes(List.of(apiKey()))
                 .select()
                 .apis(RequestHandlerSelectors.any())
                 .paths(PathSelectors.any())
@@ -57,7 +56,7 @@ public class SwaggerConfiguration {
                 = new AuthorizationScope("global", "accessEverything");
         AuthorizationScope[] authorizationScopes = new AuthorizationScope[1];
         authorizationScopes[0] = authorizationScope;
-        return Arrays.asList(new SecurityReference("JWT", authorizationScopes));
+        return List.of(new SecurityReference("JWT", authorizationScopes));
     }
 
 }
