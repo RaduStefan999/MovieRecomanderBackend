@@ -62,9 +62,9 @@ public class MLRecommenderService {
     }
 
     private Optional<List<Long>> getMlRecommendation(long userId, int nrOfMovies) {
-        System.out.println(mlRecommenderConfig.getMlURI() + "/" + userId + "/" + nrOfMovies);
+        System.out.println(mlRecommenderConfig.getMlURI() + "/prediction?user_id=" + userId + "&movies_nr=" + nrOfMovies);
         return this.getRestTemplateBuilder().build().exchange(
-                mlRecommenderConfig.getMlURI() + "/ML/" + userId + "/" + nrOfMovies,
+                mlRecommenderConfig.getMlURI() + "/prediction?user_id=" + userId + "&movies_nr=" + nrOfMovies,
                 HttpMethod.GET,
                 null,
                 new ParameterizedTypeReference<Optional<List<Long>>>() {}).getBody();
