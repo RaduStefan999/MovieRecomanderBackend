@@ -26,15 +26,16 @@ public class MLRecommenderService {
     }
 
     public List<Movie> getRecommendation(long userId, int nrOfMovies) {
+        var allMovies = movieRepository.findAll();
+
         Optional<List<Long>> movieIds = this.getMlRecommendation(userId, nrOfMovies)
                 .timeout(Duration.ofSeconds(mlRecommenderConfig.getMlTimeout()))
                 .onErrorReturn(Optional.empty()).block();
 
         if (movieIds != null && movieIds.isPresent()) {
 
-            List<Movie> recommendedMovies = movieIds.get().stream().filter
-                    (id -> movieRepository.existsById(id)).map(id -> movieRepository.getById(id))
-                    .toList();
+            var recommendedMovies = allMovies.stream().filter(movie -> movieIds.get().contains(movie.getId()))
+                                                .toList();
 
             if (recommendedMovies.size() != 0) {
                 return recommendedMovies;
