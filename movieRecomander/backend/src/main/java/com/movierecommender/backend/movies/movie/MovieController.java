@@ -12,7 +12,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/movies")
 public class MovieController {
-    private MovieRepository movieRepository;
+    private final MovieRepository movieRepository;
 
     @Autowired
     public MovieController(MovieRepository movieRepository){

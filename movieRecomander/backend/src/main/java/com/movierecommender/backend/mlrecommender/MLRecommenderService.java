@@ -1,9 +1,13 @@
 package com.movierecommender.backend.mlrecommender;
 
+import com.movierecommender.backend.BackendConfig;
+import com.movierecommender.backend.advice.BusinessException;
 import com.movierecommender.backend.movies.movie.Movie;
-import com.movierecommender.backend.movies.movie.MovieRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
@@ -11,18 +15,17 @@ import reactor.core.publisher.Mono;
 import java.time.Duration;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class MLRecommenderService {
 
-    MLRecommenderConfig mlRecommenderConfig;
-    MovieRepository movieRepository;
+    private final BackendConfig backendConfig;
+    private final MLRecommenderConfig mlRecommenderConfig;
 
     @Autowired
-    public MLRecommenderService(MLRecommenderConfig mlRecommenderConfig, MovieRepository movieRepository) {
+    public MLRecommenderService(MLRecommenderConfig mlRecommenderConfig, BackendConfig backendConfig) {
+        this.backendConfig = backendConfig;
         this.mlRecommenderConfig = mlRecommenderConfig;
-        this.movieRepository = movieRepository;
     }
 
     public List<Movie> getRecommendation(long userId, int nrOfMovies) {
@@ -30,36 +33,38 @@ public class MLRecommenderService {
                 .timeout(Duration.ofSeconds(mlRecommenderConfig.getMlTimeout()))
                 .onErrorReturn(Optional.empty()).block();
 
-        if (movieIds != null && movieIds.isPresent()) {
+        Optional<List<Movie>> movies = this.selectMovies(nrOfMovies, movieIds == null ? Optional.empty() : movieIds)
+                .timeout(Duration.ofSeconds(mlRecommenderConfig.getMlTimeout()))
+                .onErrorResume(e -> {
+                    e.printStackTrace();
+                    return Mono.just(Optional.empty());
+                }).block();
 
-            List<Movie> recommendedMovies = movieIds.get().stream().filter
-                    (id -> movieRepository.existsById(id)).map(id -> movieRepository.getById(id))
-                    .toList();
-
-            if (recommendedMovies.size() != 0) {
-                return recommendedMovies;
-            }
-
-            System.out.println("ML microservice provided no movies");
-            System.out.println("All hope is not yet lost --- trying backend fallback");
-            return getFallbackRecommendation(userId, nrOfMovies);
+        if (movies == null || movies.isEmpty()) {
+            throw new BusinessException("Failed to make request to own api", "Invalid self request",
+                    HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
-        System.out.println("ML microservice failed to provide prediction");
-        System.out.println("All hope is not yet lost --- trying backend fallback");
-        return getFallbackRecommendation(userId, nrOfMovies);
+        return movies.get();
     }
 
     private Mono<Optional<List<Long>>> getMlRecommendation(long userId, int nrOfMovies) {
         WebClient mlMicroservice = WebClient.create(mlRecommenderConfig.getMlURI());
 
         return mlMicroservice.get()
-                .uri(mlRecommenderConfig.getMlURI() + "/prediction?user_id=" + userId + "&movies_nr=" + nrOfMovies)
-                .retrieve()
-                .bodyToMono(new ParameterizedTypeReference<Optional<List<Long>>>() {});
+            .uri(mlRecommenderConfig.getMlURI() + "/prediction?user_id=" + userId + "&movies_nr=" + nrOfMovies)
+            .retrieve()
+            .bodyToMono(new ParameterizedTypeReference<Optional<List<Long>>>() {});
     }
 
-    private List<Movie> getFallbackRecommendation(long userId, int nrOfMovies) {
-        return movieRepository.findAll().stream().limit(nrOfMovies).toList();
+    private Mono<Optional<List<Movie>>> selectMovies(int nrOfMovies, Optional<List<Long>> movieIds) {
+        WebClient selfService = WebClient.create(backendConfig.getSelfURI());
+
+        return selfService.post()
+            .uri("/api/v1/movies/selector/" + nrOfMovies)
+            .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+            .body(Mono.just(movieIds), new ParameterizedTypeReference<Optional<List<Long>>>() {})
+            .retrieve()
+            .bodyToMono(new ParameterizedTypeReference<Optional<List<Movie>>>() {});
     }
 }
