@@ -1,5 +1,6 @@
 package com.movierecommender.backend.users.user;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.movierecommender.backend.comments.Comment;
 import com.movierecommender.backend.reviews.Review;
 import com.movierecommender.backend.users.User;
@@ -22,6 +23,7 @@ public class AppUser extends User {
     private String country;
     private String phoneNumber;
     @Transient
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Integer age;
 
     public AppUser() {

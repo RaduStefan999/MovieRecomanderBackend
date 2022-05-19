@@ -1,6 +1,6 @@
 package com.movierecommender.backend.comments;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.movierecommender.backend.movies.movie.Movie;
 import com.movierecommender.backend.users.user.AppUser;
 import org.hibernate.annotations.GenericGenerator;
@@ -21,12 +21,12 @@ public class Comment {
 
     @ManyToOne
     @JoinColumn(name = "userId")
-    @JsonIgnore
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     AppUser appUser;
 
     @ManyToOne
     @JoinColumn(name = "movieId")
-    @JsonIgnore
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     Movie movie;
 
     public Comment() {
