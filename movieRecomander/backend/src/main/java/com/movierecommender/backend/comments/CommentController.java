@@ -2,7 +2,7 @@ package com.movierecommender.backend.comments;
 
 import com.movierecommender.backend.advice.BusinessException;
 import com.movierecommender.backend.identity.IdentityService;
-import com.movierecommender.backend.security.facades.AuthenticationFacade;
+import com.movierecommender.backend.security.config.UserRoles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,6 +33,11 @@ public class CommentController {
     @PreAuthorize("hasAnyRole('ROLE_USER')")
     @ResponseStatus(code = HttpStatus.CREATED, reason = "CREATED")
     public void post(@RequestBody Comment comment) {
+        var currentAppUser = identityService.getLoggedInAppUser();
+        if (currentAppUser.isEmpty()) {
+            throw new BusinessException("Could not find current app user", "Invalid permission", HttpStatus.FORBIDDEN);
+        }
+        comment.setAppUser(currentAppUser.get());
         commentRepository.save(comment);
     }
 
@@ -55,9 +60,8 @@ public class CommentController {
             throw new BusinessException("Comment not found", "Invalid data", HttpStatus.NOT_FOUND);
         }
 
-        var currentUser = this.identityService.getLoggedInUser();
-        if (currentUser.isEmpty() || !currentUser.get().equals(foundComment.get().getAppUser())) {
-            throw new BusinessException("User can only update his own comment", "Invalid permission", HttpStatus.FORBIDDEN);
+        if (!this.userCanModify(foundComment.get())) {
+            throw new BusinessException("User can't modify this", "Invalid permission", HttpStatus.FORBIDDEN);
         }
 
         foundComment.get().update(comment);
@@ -72,11 +76,21 @@ public class CommentController {
             throw new BusinessException("Comment not found", "Invalid data", HttpStatus.NOT_FOUND);
         }
 
-        var currentUser = this.identityService.getLoggedInUser();
-        if (currentUser.isEmpty() || !currentUser.get().equals(foundComment.get().getAppUser())) {
-            throw new BusinessException("User can only delete his own comment", "Invalid permission", HttpStatus.FORBIDDEN);
+        if (!this.userCanModify(foundComment.get())) {
+            throw new BusinessException("User can't modify this", "Invalid permission", HttpStatus.FORBIDDEN);
         }
 
         commentRepository.delete(foundComment.get());
+    }
+
+    private boolean userCanModify(Comment comment) {
+        var currentUser = this.identityService.getLoggedInUser();
+
+        return (currentUser.isPresent() &&
+            (
+                UserRoles.valueOf(currentUser.get().getRole()) == UserRoles.ADMIN ||
+                !currentUser.get().equals(comment.getAppUser())
+            )
+        );
     }
 }

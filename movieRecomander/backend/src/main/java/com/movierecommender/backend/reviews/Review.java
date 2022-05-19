@@ -1,5 +1,6 @@
 package com.movierecommender.backend.reviews;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.movierecommender.backend.movies.movie.Movie;
 import com.movierecommender.backend.users.user.AppUser;
@@ -18,7 +19,7 @@ public class Review {
 
     @ManyToOne
     @JoinColumn(name = "userId")
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @JsonIgnore
     AppUser appUser;
 
     @ManyToOne
