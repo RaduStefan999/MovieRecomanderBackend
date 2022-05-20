@@ -30,6 +30,7 @@ public class Movie {
 
     private String trailerLink;
     private String movieLink;
+    private String thumbnailLink;
 
     @OneToMany(mappedBy = "movie")
     Set<Review> ratings;
@@ -42,7 +43,7 @@ public class Movie {
 
     public Movie(String name, String summary, String description, Integer ageRestriction,
                  List<MovieGenre> movieGenres, LocalDate releaseDate, Integer duration, String trailerLink,
-                 String movieLink, Set<Review> ratings, Set<Comment> comments) {
+                 String movieLink, String thumbnailLink, Set<Review> ratings, Set<Comment> comments) {
         this.name = name;
         this.summary = summary;
         this.description = description;
@@ -52,6 +53,7 @@ public class Movie {
         this.duration = duration;
         this.trailerLink = trailerLink;
         this.movieLink = movieLink;
+        this.thumbnailLink = thumbnailLink;
         this.ratings = ratings;
         this.comments = comments;
 
@@ -142,6 +144,14 @@ public class Movie {
         this.movieLink = movieLink;
     }
 
+    public String getThumbnailLink() {
+        return thumbnailLink;
+    }
+
+    public void setThumbnailLink(String thumbnailLink) {
+        this.thumbnailLink = thumbnailLink;
+    }
+
     public Set<Review> getRatings() {
         return ratings;
     }
@@ -176,11 +186,11 @@ public class Movie {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Movie movie = (Movie) o;
-        return id.equals(movie.id) && name.equals(movie.name) && Objects.equals(summary, movie.summary) && Objects.equals(description, movie.description) && Objects.equals(ageRestriction, movie.ageRestriction) && Objects.equals(movieGenres, movie.movieGenres) && releaseDate.equals(movie.releaseDate) && Objects.equals(duration, movie.duration) && Objects.equals(trailerLink, movie.trailerLink) && movieLink.equals(movie.movieLink);
+        return id.equals(movie.id) && name.equals(movie.name) && Objects.equals(summary, movie.summary) && Objects.equals(description, movie.description) && Objects.equals(movieGenres, movie.movieGenres) && releaseDate.equals(movie.releaseDate) && Objects.equals(duration, movie.duration);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, summary, description, ageRestriction, movieGenres, releaseDate, duration, trailerLink, movieLink);
+        return Objects.hash(id, name, summary, description, movieGenres, releaseDate, duration);
     }
 }
