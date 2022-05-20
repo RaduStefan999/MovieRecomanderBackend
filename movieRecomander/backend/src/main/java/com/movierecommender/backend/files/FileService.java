@@ -26,17 +26,21 @@ public class FileService {
         this.fileRepository = fileRepository;
     }
 
-    public void upload(MultipartFile file) {
+    public String upload(MultipartFile file) {
         try {
             byte[] data = file.getBytes();
             int timestamp = Clock.systemDefaultZone().instant().getNano();
             Path filePathOnServer = Paths.get(fileConfig.getFileStorePath() + "uploaded_" + timestamp);
             Files.write(filePathOnServer, data);
 
-            UploadedFile uploadedFile = new UploadedFile(filePathOnServer.toString(), "file_" + timestamp,
+            String fileId = "file_" + timestamp;
+
+            UploadedFile uploadedFile = new UploadedFile(filePathOnServer.toString(), fileId,
                     file.getName(), file.getContentType());
 
             fileRepository.save(uploadedFile);
+
+            return fileId;
         }
         catch (IOException e) {
             e.printStackTrace();
