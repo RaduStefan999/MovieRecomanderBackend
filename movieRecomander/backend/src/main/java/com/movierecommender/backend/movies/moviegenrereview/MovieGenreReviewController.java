@@ -19,10 +19,8 @@ import java.util.Random;
 @RestController
 @RequestMapping("api/v1/genre/reviews")
 public class MovieGenreReviewController {
-
     private final ReviewRepository reviewRepository;
     private final IdentityService identityService;
-
     @Autowired
     MovieRepository movieRepository;
     public MovieGenreReviewController(ReviewRepository reviewRepository, IdentityService identityService) {
@@ -31,7 +29,7 @@ public class MovieGenreReviewController {
     }
 
     @PostMapping
-    @PreAuthorize("hasAnyRole('ROLE_USER')")
+    //@PreAuthorize("hasAnyRole('ROLE_USER')")
     @ResponseStatus(code = HttpStatus.CREATED, reason = "CREATED")
     public void post(@RequestBody MovieGenre movieGenre) {
         var currentAppUser = this.identityService.getLoggedInAppUser();
