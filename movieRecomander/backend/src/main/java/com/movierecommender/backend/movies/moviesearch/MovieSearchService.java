@@ -34,6 +34,8 @@ public class MovieSearchService {
     public List<Movie> getMovieByGenres(List<String> genres){
         List<MovieGenre> movieGenresList = movieGenreRepository.findAll().stream().filter(
                 g -> genres.contains(g.getGenre())).toList();
+        //este un numar limitat de movie genre in baza de date
+        //nu cred ca e un drop in eficienta daca le luam pe toate si le filtram
 
         return movieRepository.findAll().stream().filter(
                 m -> m.getMovieGenres().stream().anyMatch(movieGenresList::contains)
