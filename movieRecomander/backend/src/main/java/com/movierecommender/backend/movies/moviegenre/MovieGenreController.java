@@ -1,9 +1,5 @@
 package com.movierecommender.backend.movies.moviegenre;
 
-<<<<<<< HEAD
-
-=======
->>>>>>> ae25cf14d26c0c574973f948231a9d34edd4aaee
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;

@@ -1,6 +1,7 @@
 package com.movierecommender.backend.users.user;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.movierecommender.backend.comments.Comment;
 import com.movierecommender.backend.reviews.Review;
 import com.movierecommender.backend.users.User;

@@ -22,6 +22,7 @@ public class Comment {
 
     @ManyToOne
     @JoinColumn(name = "userId")
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     AppUser appUser;
 
     @ManyToOne
