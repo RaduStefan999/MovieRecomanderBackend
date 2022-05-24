@@ -1,4 +1,4 @@
-package com.movierecommender.backend.movies.moviegenrereview;
+package com.movierecommender.backend.reviews;
 
 import com.movierecommender.backend.advice.BusinessException;
 import com.movierecommender.backend.identity.IdentityService;
@@ -38,29 +38,23 @@ public class MovieGenreReviewController {
         if (currentAppUser.isEmpty()) {
             throw new BusinessException("Could not find current app user", "Invalid permission", HttpStatus.FORBIDDEN);
         }
-        Review review=new Review();
-        review.setAppUser(currentAppUser.get());
-        review.setReviewValue(5);
 
-        Random random=new Random();
+        Random random = new Random();
         List<Movie> movies=findAllMovieByGenre(movieGenre);
         if (movies.isEmpty()) {
             throw new BusinessException("The list of movies for this genre is empty", "Invalid permission", HttpStatus.INSUFFICIENT_STORAGE);
         }
         int randomMovie = random.nextInt(movies.size());
-        review.setMovie(movies.get(randomMovie));
+
+        Review review = new Review(currentAppUser.get(), movies.get(randomMovie), 5);
 
         reviewRepository.save(review);
     }
 
     private List<Movie> findAllMovieByGenre(MovieGenre movieGenre) {
-        List<Movie> movies=new ArrayList<>();
-        for(var movie :movieRepository.findAll()){
-            if(movie.getMovieGenres().equals(movieGenre)){
-                movies.add(movie);
-            }
-        }
-        return movies;
+        return movieRepository.findAll().stream()
+                .filter(m -> m.getMovieGenres().contains(movieGenre))
+                .toList();
     }
 
 }

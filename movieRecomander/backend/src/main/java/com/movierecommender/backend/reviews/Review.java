@@ -32,6 +32,12 @@ public class Review {
     public Review() {
     }
 
+    public Review(AppUser appUser, Movie movie, Integer reviewValue) {
+        this.appUser = appUser;
+        this.movie = movie;
+        this.reviewValue = reviewValue;
+    }
+
     public Review(Long id, AppUser appUser, Movie movie, Integer reviewValue) {
         this.id = id;
         this.appUser = appUser;
