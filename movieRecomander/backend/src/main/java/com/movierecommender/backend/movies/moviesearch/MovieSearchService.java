@@ -16,6 +16,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class MovieSearchService {
@@ -49,6 +50,11 @@ public class MovieSearchService {
         List<MovieGenre> movieGenresList = getGenres(genres);
         List<Movie> movies = movieRepository.findAll();
         List<Movie> returnedMovies = new ArrayList<>();
+        /*return      movies.stream()
+                .filter(e -> movie.)
+                        .filter(e -> movies.getcontains(e.getMovieGenres()))
+                        .collect(Collectors.toList());*/
+        //
 
         for(Movie movie : movies) {
             for (MovieGenre genre : movieGenresList)
@@ -60,8 +66,8 @@ public class MovieSearchService {
                     break;
                 }
         }
-
         return returnedMovies;
+
 
         /**CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
          CriteriaQuery criteriaQuery = criteriaBuilder.createQuery(Movie.class);

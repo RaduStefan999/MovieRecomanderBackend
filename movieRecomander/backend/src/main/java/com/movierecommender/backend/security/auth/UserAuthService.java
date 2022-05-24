@@ -9,9 +9,9 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserAuthService implements UserDetailsService {
 
+    @Autowired
     private final UserAuthDao userAuthDao;
 
-    @Autowired
     public UserAuthService(UserAuthDao userAuthDao) {
         this.userAuthDao = userAuthDao;
     }

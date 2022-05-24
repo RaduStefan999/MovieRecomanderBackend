@@ -12,9 +12,10 @@ import java.util.List;
 @RestController
 @RequestMapping("api/v1/comments")
 public class CommentController {
-    private final CommentRepository commentRepository;
 
     @Autowired
+    private final CommentRepository commentRepository;
+
     public CommentController(CommentRepository commentRepository) {
         this.commentRepository = commentRepository;
     }
@@ -23,13 +24,6 @@ public class CommentController {
     @PreAuthorize("hasAnyRole('ROLE_USER')")
     public ResponseEntity<List<Comment>> get() {
         return ResponseEntity.ok(commentRepository.findAll());
-    }
-
-    @PostMapping
-    @PreAuthorize("hasAnyRole('ROLE_USER')")
-    @ResponseStatus(code = HttpStatus.CREATED, reason = "CREATED")
-    public void post(@RequestBody Comment comment) {
-        commentRepository.save(comment);
     }
 
     @GetMapping("/{id}")
@@ -41,6 +35,14 @@ public class CommentController {
         }
         return ResponseEntity.ok(foundComment.get());
     }
+
+    @PostMapping
+    @PreAuthorize("hasAnyRole('ROLE_USER')")
+    @ResponseStatus(code = HttpStatus.CREATED, reason = "CREATED")
+    public void post(@RequestBody Comment comment) {
+        commentRepository.save(comment);
+    }
+
 
     @PutMapping("/{id}")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN')")

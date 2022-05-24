@@ -21,7 +21,6 @@ public class Comment {
 
     @ManyToOne
     @JoinColumn(name = "userId")
-    @JsonIgnore
     AppUser appUser;
 
     @ManyToOne

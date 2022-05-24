@@ -1,5 +1,6 @@
 package com.movierecommender.backend.users.user;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.movierecommender.backend.comments.Comment;
 import com.movierecommender.backend.reviews.Review;
 import com.movierecommender.backend.users.User;
@@ -23,6 +24,14 @@ public class AppUser extends User {
     private String phoneNumber;
     @Transient
     private Integer age;
+
+    @OneToMany(mappedBy = "appUser")
+    Set<Review> ratings;
+
+    @OneToMany(mappedBy = "appUser")
+    //@JsonIgnore
+    Set<Comment> comments;
+
 
     public AppUser() {
         super(String.valueOf(UserRoles.USER));
@@ -102,11 +111,4 @@ public class AppUser extends User {
                 ", phoneNumber='" + phoneNumber + '\'' +
                 '}';
     }
-
-    @OneToMany(mappedBy = "appUser")
-    Set<Review> ratings;
-
-    @OneToMany(mappedBy = "appUser")
-    Set<Comment> comments;
-
 }

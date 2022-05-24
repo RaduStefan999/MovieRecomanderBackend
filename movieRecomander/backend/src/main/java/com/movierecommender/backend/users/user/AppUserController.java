@@ -14,9 +14,9 @@ import java.util.Optional;
 @RestController
 @RequestMapping(path = "api/v1/user")
 public class AppUserController {
+    @Autowired
     private final AppUserService appUserService;
 
-    @Autowired
     public AppUserController(AppUserService appUserService, AppUserRepository appUserRepository) {
         this.appUserService = appUserService;
     }
