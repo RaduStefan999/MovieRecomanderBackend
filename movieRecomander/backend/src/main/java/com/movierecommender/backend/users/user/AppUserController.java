@@ -49,10 +49,13 @@ public class AppUserController {
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @ResponseStatus(code = HttpStatus.NO_CONTENT, reason = "UPDATED")
-    public void update(@RequestBody AppUser appUser, @PathVariable Long id) {
-        if (!appUserService.updateService(id, appUser)) {
-            throw new BusinessException("User not found", "Invalid data", HttpStatus.NOT_FOUND);
+    public void update(@RequestBody AppUserUpdateModel appUserUpdateModel, @PathVariable Long id) {
+        var currentAppUser = this.identityService.getLoggedInAppUser();
+        if (currentAppUser.isEmpty()) {
+            throw new BusinessException("Could not find current app user", "Invalid permission", HttpStatus.FORBIDDEN);
         }
+
+        appUserService.updateService(id, appUserUpdateModel);
     }
 
     @DeleteMapping(path = "{appUserId}")

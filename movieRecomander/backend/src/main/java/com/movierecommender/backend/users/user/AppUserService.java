@@ -52,13 +52,21 @@ public class AppUserService {
     }
 
 
-    public boolean updateService(Long id,AppUser appUser) {
+    public void updateService(Long id,AppUserUpdateModel appUserUpdateModel) {
         var foundUser = appUserRepository.findAppUserById(id);
         if (foundUser.isEmpty()) {
-            return false;
+            throw new BusinessException("User not found", "Invalid data", HttpStatus.NOT_FOUND);
         }
-        foundUser.get().update(appUser,id);
-        appUserRepository.save(appUser);
-        return true;
+
+        if (appUserRepository.findAppUserByEmail(appUserUpdateModel.getEmail()).isPresent()) {
+            throw new BusinessException("Email is already present", "Invalid data", HttpStatus.BAD_REQUEST);
+        }
+
+        var user = foundUser.get();
+        user.setName(appUserUpdateModel.getName());
+        user.setEmail(appUserUpdateModel.getEmail());
+        user.setProfileImageLink(appUserUpdateModel.getProfileImageLink());
+
+        appUserRepository.save(user);
     }
 }
