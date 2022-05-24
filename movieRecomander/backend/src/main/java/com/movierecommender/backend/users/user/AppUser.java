@@ -22,6 +22,7 @@ public class AppUser extends User {
     private LocalDate birthdate;
     private String country;
     private String phoneNumber;
+    private String profileImageLink;
     @Transient
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Integer age;
@@ -38,28 +39,31 @@ public class AppUser extends User {
         super(String.valueOf(UserRoles.USER));
     }
 
-    public AppUser(String gender, LocalDate birthdate, String country, String phoneNumber) {
+    public AppUser(String gender, LocalDate birthdate, String country, String phoneNumber, String profileImageLink) {
         super(String.valueOf(UserRoles.USER));
         this.gender = gender;
         this.birthdate = birthdate;
         this.country = country;
         this.phoneNumber = phoneNumber;
+        this.profileImageLink = profileImageLink;
     }
 
-    public AppUser(String email, String name, String password, String gender, LocalDate birthdate, String country, String phoneNumber) {
+    public AppUser(String email, String name, String password, String gender, LocalDate birthdate, String country, String phoneNumber, String profileImageLink) {
         super(email, name, password, String.valueOf(UserRoles.USER));
         this.gender = gender;
         this.birthdate = birthdate;
         this.country = country;
         this.phoneNumber = phoneNumber;
+        this.profileImageLink = profileImageLink;
     }
 
-    public AppUser(Long id, String email, String name, String password, String gender, LocalDate birthdate, String country, String phoneNumber) {
+    public AppUser(Long id, String email, String name, String password, String gender, LocalDate birthdate, String country, String phoneNumber, String profileImageLink) {
         super(id, email, name, password, String.valueOf(UserRoles.USER));
         this.gender = gender;
         this.birthdate = birthdate;
         this.country = country;
         this.phoneNumber = phoneNumber;
+        this.profileImageLink = profileImageLink;
     }
 
     public String getGender() {
@@ -96,6 +100,14 @@ public class AppUser extends User {
 
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
+    }
+
+    public String getProfileImageLink() {
+        return profileImageLink;
+    }
+
+    public void setProfileImageLink(String profileImageLink) {
+        this.profileImageLink = profileImageLink;
     }
 
     @Transactional

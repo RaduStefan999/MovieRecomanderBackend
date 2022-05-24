@@ -2,11 +2,13 @@ package com.movierecommender.backend.users;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.movierecommender.backend.users.user.AppUser;
+import com.movierecommender.backend.users.user.AppUserUpdateModel;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
+import java.util.Objects;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
@@ -89,6 +91,19 @@ public abstract class User {
     public void setRole(String role) { this.role = role; }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return id.equals(user.id) && email.equals(user.email) && name.equals(user.name) && role.equals(user.role);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, email, name, role);
+    }
+
+    @Override
     public String toString() {
         return "User{" +
                 "id=" + id +
@@ -96,12 +111,5 @@ public abstract class User {
                 ", name='" + name + '\'' +
                 ", password='" + password + '\'' +
                 '}';
-    }
-
-    public void update(AppUser appUser, Long id){
-        this.email = appUser.getEmail();
-        this.name = appUser.getName();
-        this.password = appUser.getPassword();
-        this.role = appUser.getRole();
     }
 }
