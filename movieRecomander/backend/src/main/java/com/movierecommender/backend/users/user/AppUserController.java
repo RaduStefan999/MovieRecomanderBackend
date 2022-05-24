@@ -1,6 +1,9 @@
 package com.movierecommender.backend.users.user;
 
 import com.movierecommender.backend.advice.BusinessException;
+import com.movierecommender.backend.comments.Comment;
+import com.movierecommender.backend.identity.IdentityService;
+import com.movierecommender.backend.security.config.UserRoles;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,10 +20,12 @@ import java.util.Optional;
 @RequestMapping(path = "api/v1/users")
 public class AppUserController {
     private final AppUserService appUserService;
+    private final IdentityService identityService;
 
     @Autowired
-    public AppUserController(AppUserService appUserService, AppUserRepository appUserRepository) {
+    public AppUserController(AppUserService appUserService, IdentityService identityService) {
         this.appUserService = appUserService;
+        this.identityService = identityService;
     }
 
     @ApiOperation(value = "This method is used to get the users.")      // description added
@@ -47,21 +52,32 @@ public class AppUserController {
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
     @ResponseStatus(code = HttpStatus.NO_CONTENT, reason = "UPDATED")
     public void update(@RequestBody AppUserUpdateModel appUserUpdateModel, @PathVariable Long id) {
-        var currentAppUser = this.identityService.getLoggedInAppUser();
-        if (currentAppUser.isEmpty()) {
-            throw new BusinessException("Could not find current app user", "Invalid permission", HttpStatus.FORBIDDEN);
+
+        if (!this.userCanModify(id)) {
+            throw new BusinessException("User can't modify this", "Invalid permission", HttpStatus.FORBIDDEN);
         }
 
         appUserService.updateService(id, appUserUpdateModel);
     }
 
     @DeleteMapping(path = "{appUserId}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     @ResponseStatus(code = HttpStatus.NO_CONTENT, reason = "DELETED")
     public void deleteUser(@PathVariable("appUserId") Long appUserId) {
         appUserService.deleteAppUser(appUserId);
+    }
+
+    private boolean userCanModify(Long id) {
+        var currentUser = this.identityService.getLoggedInUser();
+
+        return (currentUser.isPresent() &&
+                (
+                        UserRoles.valueOf(currentUser.get().getRole()) == UserRoles.ADMIN ||
+                                currentUser.get().getId().equals(id)
+                )
+        );
     }
 }
