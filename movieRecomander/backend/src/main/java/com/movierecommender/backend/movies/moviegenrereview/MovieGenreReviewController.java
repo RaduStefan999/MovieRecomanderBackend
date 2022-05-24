@@ -21,15 +21,17 @@ import java.util.Random;
 public class MovieGenreReviewController {
     private final ReviewRepository reviewRepository;
     private final IdentityService identityService;
+    private final MovieRepository movieRepository;
+
     @Autowired
-    MovieRepository movieRepository;
-    public MovieGenreReviewController(ReviewRepository reviewRepository, IdentityService identityService) {
+    public MovieGenreReviewController(ReviewRepository reviewRepository, IdentityService identityService, MovieRepository movieRepository) {
         this.reviewRepository = reviewRepository;
         this.identityService = identityService;
+        this.movieRepository = movieRepository;
     }
 
     @PostMapping
-    //@PreAuthorize("hasAnyRole('ROLE_USER')")
+    @PreAuthorize("hasAnyRole('ROLE_USER')")
     @ResponseStatus(code = HttpStatus.CREATED, reason = "CREATED")
     public void post(@RequestBody MovieGenre movieGenre) {
         var currentAppUser = this.identityService.getLoggedInAppUser();
