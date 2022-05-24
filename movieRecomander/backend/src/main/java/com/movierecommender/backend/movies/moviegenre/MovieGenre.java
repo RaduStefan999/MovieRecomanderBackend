@@ -6,6 +6,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import java.util.Objects;
 
 @Entity
 public class MovieGenre {
@@ -35,5 +36,26 @@ public class MovieGenre {
 
     public void setGenre(String genre) {
         this.genre = genre;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        MovieGenre that = (MovieGenre) o;
+        return id.equals(that.id) && genre.equals(that.genre);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, genre);
+    }
+
+    @Override
+    public String toString() {
+        return "MovieGenre{" +
+                "id=" + id +
+                ", genre='" + genre + '\'' +
+                '}';
     }
 }

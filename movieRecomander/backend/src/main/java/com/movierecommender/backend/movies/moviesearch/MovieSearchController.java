@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping(path = "api/v1/movie/search")
+@RequestMapping(path = "api/v1/movies/search")
 public class MovieSearchController {
     private final MovieSearchService movieSearchService;
 
@@ -19,9 +19,15 @@ public class MovieSearchController {
         this.movieSearchService = movieSearchService;
     }
 
-    @GetMapping("/{movieName}")
+    @GetMapping("/name/{movieName}")
     @PreAuthorize("hasAnyRole('ROLE_USER')")
     public ResponseEntity<List<Movie>> getMovieByName(@PathVariable String movieName){
         return ResponseEntity.ok(movieSearchService.getMovieByName(movieName));
+    }
+
+    @GetMapping("/genre/{movieGenres}")
+    @PreAuthorize("hasAnyRole('ROLE_USER')")
+    public ResponseEntity<List<Movie>> searchMovieByGenres(@PathVariable List<String> movieGenres){
+        return ResponseEntity.ok(movieSearchService.getMovieByGenres(movieGenres));
     }
 }

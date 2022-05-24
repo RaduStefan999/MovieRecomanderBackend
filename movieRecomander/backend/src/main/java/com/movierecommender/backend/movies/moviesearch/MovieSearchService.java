@@ -4,6 +4,7 @@ package com.movierecommender.backend.movies.moviesearch;
 import com.movierecommender.backend.movies.movie.Movie;
 import com.movierecommender.backend.movies.movie.MovieRepository;
 import com.movierecommender.backend.movies.moviegenre.MovieGenre;
+import com.movierecommender.backend.movies.moviegenre.MovieGenreRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -13,11 +14,12 @@ import java.util.List;
 @Service
 public class MovieSearchService {
 
+    private final MovieGenreRepository movieGenreRepository;
     private final MovieRepository movieRepository;
 
-
     @Autowired
-    public MovieSearchService(MovieRepository movieRepository){
+    public MovieSearchService(MovieGenreRepository movieGenreRepository, MovieRepository movieRepository){
+        this.movieGenreRepository = movieGenreRepository;
         this.movieRepository = movieRepository;
     }
 
@@ -29,7 +31,14 @@ public class MovieSearchService {
         return movieRepository.findAll(movieNameContains(movieName));
     }
 
-    /**public List<Movie> getMovieByGenre(List<MovieGenre> genres){
-        
-    }*/
+    public List<Movie> getMovieByGenres(List<String> genres){
+        List<MovieGenre> movieGenresList = movieGenreRepository.findAll().stream().filter(
+                g -> genres.contains(g.getGenre())).toList();
+        //este un numar limitat de movie genre in baza de date
+        //nu cred ca e un drop in eficienta daca le luam pe toate si le filtram
+
+        return movieRepository.findAll().stream().filter(
+                m -> m.getMovieGenres().stream().anyMatch(movieGenresList::contains)
+        ).toList();
+    }
 }
