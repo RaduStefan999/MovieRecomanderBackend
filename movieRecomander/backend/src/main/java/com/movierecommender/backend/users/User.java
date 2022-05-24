@@ -1,5 +1,6 @@
 package com.movierecommender.backend.users;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.movierecommender.backend.users.user.AppUser;
 import org.hibernate.annotations.GenericGenerator;
 
@@ -25,9 +26,11 @@ public abstract class User {
 
     @Pattern(regexp="(.)*.{8,20}$",message="length must be 8")
     @NotBlank(message="Password is mandatory")
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password; //password that will be stored as hash
 
     @NotBlank(message="Role is mandatory")
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private String role;
 
     public User() {}

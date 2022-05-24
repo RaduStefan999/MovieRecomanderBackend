@@ -14,11 +14,16 @@ import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.crypto.SecretKey;
+
+import java.lang.reflect.Array;
+import java.util.Arrays;
+import java.util.stream.Stream;
 
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 
@@ -26,6 +31,18 @@ import static org.springframework.security.config.http.SessionCreationPolicy.STA
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
+
+    private static final String[] SWAGGER_AUTH_WHITELIST = {
+            "/swagger-resources/**",
+            "/webjars/**",
+            "/swagger-ui*",
+            "/swagger-ui/**/*.*",
+            "/v2/api-docs/**"
+    };
+    private static final String[] APP_AUTH_WHITELIST = {
+            "/api/v1/login",
+            "/api/v1/users/register"
+    };
 
     private final PasswordEncoder passwordEncoder;
     private final UserAuthService userAuthService;
@@ -55,8 +72,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .addFilter(jwtAuthenticationFilter())
                 .addFilterAfter(new JwtTokenVerifier(secretKey, jwtConfig), JwtAuthenticationFilter.class)
                 .authorizeRequests()
-                .antMatchers("/api/v1/login", "/api/v1/user/register",
-                        "/swagger-ui*", "/swagger-ui/**/*.*", "/v3/api-docs/**", "/documentation").permitAll()
+                .antMatchers(
+                        Stream.concat(Arrays.stream(SWAGGER_AUTH_WHITELIST), Arrays.stream(APP_AUTH_WHITELIST))
+                                .toArray(size -> (String[]) Array.newInstance(String.class, size))
+                )
+                .permitAll()
                 .anyRequest()
                 .authenticated();
     }
@@ -96,5 +116,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     protected RestAuthenticationFailureHandler authenticationFailureHandler(){
         return new RestAuthenticationFailureHandler();
+    }
+
+    @Override
+    public void configure(WebSecurity web) throws Exception {
+        web.ignoring().antMatchers(SWAGGER_AUTH_WHITELIST);
     }
 }

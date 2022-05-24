@@ -23,6 +23,7 @@ public class AppUser extends User {
     private String country;
     private String phoneNumber;
     @Transient
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Integer age;
 
     @OneToMany(mappedBy = "appUser")

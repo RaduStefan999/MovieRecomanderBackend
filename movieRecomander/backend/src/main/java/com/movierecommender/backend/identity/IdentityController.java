@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(path = "api/v1/identity")
 public class IdentityController {
 
-    IdentityService identityService;
+    private final IdentityService identityService;
 
     public IdentityController(IdentityService identityService) {
         this.identityService = identityService;

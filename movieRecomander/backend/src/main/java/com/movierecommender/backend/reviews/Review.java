@@ -24,12 +24,18 @@ public class Review {
 
     @ManyToOne
     @JoinColumn(name = "movieId")
-    @JsonIgnore
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     Movie movie;
 
     private Integer reviewValue;
 
     public Review() {
+    }
+
+    public Review(AppUser appUser, Movie movie, Integer reviewValue) {
+        this.appUser = appUser;
+        this.movie = movie;
+        this.reviewValue = reviewValue;
     }
 
     public Review(Long id, AppUser appUser, Movie movie, Integer reviewValue) {
