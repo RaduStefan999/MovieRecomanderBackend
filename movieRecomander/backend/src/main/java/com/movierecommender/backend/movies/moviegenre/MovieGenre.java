@@ -43,12 +43,12 @@ public class MovieGenre {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         MovieGenre that = (MovieGenre) o;
-        return id.equals(that.id) && genre.equals(that.genre);
+        return id.equals(that.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, genre);
+        return Objects.hash(id);
     }
 
     @Override
