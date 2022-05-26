@@ -27,6 +27,13 @@ public class AppUser extends User {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Integer age;
 
+    @OneToMany(mappedBy = "appUser")
+    Set<Review> ratings;
+
+    @OneToMany(mappedBy = "appUser")
+    Set<Comment> comments;
+
+
     public AppUser() {
         super(String.valueOf(UserRoles.USER));
     }
@@ -116,11 +123,4 @@ public class AppUser extends User {
                 ", phoneNumber='" + phoneNumber + '\'' +
                 '}';
     }
-
-    @OneToMany(mappedBy = "appUser")
-    Set<Review> ratings;
-
-    @OneToMany(mappedBy = "appUser")
-    Set<Comment> comments;
-
 }

@@ -19,6 +19,7 @@ import java.util.Optional;
 @RestController
 @RequestMapping(path = "api/v1/users")
 public class AppUserController {
+
     private final AppUserService appUserService;
     private final IdentityService identityService;
 

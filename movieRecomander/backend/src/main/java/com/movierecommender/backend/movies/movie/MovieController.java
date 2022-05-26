@@ -1,6 +1,7 @@
 package com.movierecommender.backend.movies.movie;
 
 import com.movierecommender.backend.advice.BusinessException;
+import com.movierecommender.backend.comments.Comment;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -8,11 +9,13 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/api/v1/movies")
 public class MovieController {
-    private MovieRepository movieRepository;
+
+    private final MovieRepository movieRepository;
 
     @Autowired
     public MovieController(MovieRepository movieRepository){
@@ -32,6 +35,16 @@ public class MovieController {
             throw new BusinessException("Movie not found", "Invalid data", HttpStatus.NOT_FOUND);
         }
         return ResponseEntity.ok(movieRepository.findById(id).get());
+    }
+
+    @GetMapping("/comments/{id}")
+    @PreAuthorize("hasAnyRole('ROLE_USER')")
+    public ResponseEntity<Set<Comment>> getMovieComments(@PathVariable Long id){
+        var findMovie = movieRepository.findById(id);
+        if (findMovie.isEmpty()) {
+            throw new BusinessException("Comment not found", "Invalid data", HttpStatus.NOT_FOUND);
+        }
+        return ResponseEntity.ok(findMovie.get().getComments());
     }
 
     @PostMapping

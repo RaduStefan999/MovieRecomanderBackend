@@ -22,7 +22,6 @@ public class Movie {
     private String summary;
     private String description;
     private Integer ageRestriction;
-    //private List<String> tags = new ArrayList<>();
     @ManyToMany
     private List<MovieGenre> movieGenres;
     private LocalDate releaseDate;
@@ -56,12 +55,6 @@ public class Movie {
         this.thumbnailLink = thumbnailLink;
         this.ratings = ratings;
         this.comments = comments;
-
-        /**String[] words = name.split("\\s");
-        //this.tags.addAll(words);
-        for(MovieGenre genre : movieGenres){
-            this.tags.add(genre.getGenre());
-        }*/
     }
 
     public Long getId() {
