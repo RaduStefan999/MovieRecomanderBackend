@@ -15,7 +15,7 @@ public class PopulateAppAdmin implements ApplicationRunner {
 
     private final AppAdminRepository appAdminRepository;
 
-    private PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
     public PopulateAppAdmin( AppAdminRepository appAdminRepository, PasswordEncoder passwordEncoder) {
@@ -25,7 +25,7 @@ public class PopulateAppAdmin implements ApplicationRunner {
 
     public void run(ApplicationArguments args) {
 
-        if (Arrays.stream(args.getSourceArgs()).anyMatch(argument -> argument.equals("populate")))
+        if (Arrays.asList(args.getSourceArgs()).contains("populate"))
         {
             AppAdmin admin1 = new AppAdmin("ionescuandrei@gmail.com","Ionescu Andrei",
                      passwordEncoder.encode("ContAdmin1"));

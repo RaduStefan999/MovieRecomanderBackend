@@ -9,9 +9,6 @@ public class MLRecommenderConfig {
     private String mlURI;
     private long mlTimeout;
 
-    public MLRecommenderConfig() {
-    }
-
     public String getMlURI() {
         return mlURI;
     }

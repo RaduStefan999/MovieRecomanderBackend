@@ -17,6 +17,10 @@ public class CommentController {
     private final CommentRepository commentRepository;
     private final IdentityService identityService;
 
+    private static final String INVALID_PERMISSION = "Invalid permission";
+    private static final String COMMENT_NOT_FOUND = "Comment not found";
+    private static final String INVALID_DATA = "Invalid data";
+
     @Autowired
     public CommentController(CommentRepository commentRepository, IdentityService identityService) {
         this.commentRepository = commentRepository;
@@ -32,13 +36,13 @@ public class CommentController {
     @PostMapping
     @PreAuthorize("hasAnyRole('ROLE_USER')")
     @ResponseStatus(code = HttpStatus.CREATED, reason = "CREATED")
-    public void post(@RequestBody Comment comment) {
+    public void post(@RequestBody CommentDTO commentDTO) {
         var currentAppUser = identityService.getLoggedInAppUser();
         if (currentAppUser.isEmpty()) {
-            throw new BusinessException("Could not find current app user", "Invalid permission", HttpStatus.FORBIDDEN);
+            throw new BusinessException("Could not find current app user", INVALID_PERMISSION, HttpStatus.FORBIDDEN);
         }
-        comment.setAppUser(currentAppUser.get());
-        commentRepository.save(comment);
+        commentDTO.setAppUser(currentAppUser.get());
+        commentRepository.save(new Comment(commentDTO));
     }
 
     @GetMapping("/{id}")
@@ -46,7 +50,7 @@ public class CommentController {
     public ResponseEntity<Comment> read(@PathVariable("id") Long id) {
         var foundComment = commentRepository.findById(id);
         if (foundComment.isEmpty()) {
-            throw new BusinessException("Comment not found", "Invalid data", HttpStatus.NOT_FOUND);
+            throw new BusinessException(COMMENT_NOT_FOUND, INVALID_DATA, HttpStatus.NOT_FOUND);
         }
         return ResponseEntity.ok(foundComment.get());
     }
@@ -54,17 +58,17 @@ public class CommentController {
     @PutMapping("/{id}")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
     @ResponseStatus(code = HttpStatus.NO_CONTENT, reason = "UPDATED")
-    public void update(@PathVariable("id") Long id, @RequestBody Comment comment) {
+    public void update(@PathVariable("id") Long id, @RequestBody CommentDTO commentDTO) {
         var foundComment = commentRepository.findById(id);
         if (foundComment.isEmpty()) {
-            throw new BusinessException("Comment not found", "Invalid data", HttpStatus.NOT_FOUND);
+            throw new BusinessException(COMMENT_NOT_FOUND, INVALID_DATA, HttpStatus.NOT_FOUND);
         }
 
         if (!this.userCanModify(foundComment.get())) {
-            throw new BusinessException("User can't modify this", "Invalid permission", HttpStatus.FORBIDDEN);
+            throw new BusinessException("User can't modify this", INVALID_PERMISSION, HttpStatus.FORBIDDEN);
         }
 
-        foundComment.get().update(comment);
+        foundComment.get().update(commentDTO);
     }
 
     @DeleteMapping("/{id}")
@@ -73,11 +77,11 @@ public class CommentController {
     public void delete(@PathVariable("id") Long id) {
         var foundComment = commentRepository.findById(id);
         if (foundComment.isEmpty()) {
-            throw new BusinessException("Comment not found", "Invalid data", HttpStatus.NOT_FOUND);
+            throw new BusinessException(COMMENT_NOT_FOUND, INVALID_DATA, HttpStatus.NOT_FOUND);
         }
 
         if (!this.userCanModify(foundComment.get())) {
-            throw new BusinessException("User can't modify this", "Invalid permission", HttpStatus.FORBIDDEN);
+            throw new BusinessException("User can't modify this", INVALID_PERMISSION, HttpStatus.FORBIDDEN);
         }
 
         commentRepository.delete(foundComment.get());

@@ -1,4 +1,4 @@
-package com.movierecommender.backend.movies.profiler;
+package com.movierecommender.backend.movies.movielist;
 
 import com.movierecommender.backend.movies.movie.Movie;
 import com.movierecommender.backend.movies.movie.MovieRepository;
@@ -9,24 +9,22 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
-
-import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
 @RestController
 @RequestMapping(path = "api/v1/movie/profiler")
 public class MovieListController {
     @Autowired
     MovieRepository movieRepository;
-    MovieListService movieListService;
+    private final SecureRandom random = new SecureRandom();
 
     @GetMapping("/{movieList}")
     @PreAuthorize("hasAnyRole('ROLE_USER')")
     public ResponseEntity<List<Movie>>  movieListPref(){
         int count=0;
-        Random random=new Random();
+
         List <Movie> movies=new ArrayList<>();
         if(movieRepository.findAll().size()>5) {
             while (count < 5) {
@@ -38,7 +36,7 @@ public class MovieListController {
             }
         }
         else
-            if(movieRepository.findAll().size()!=0) {
+            if(!movieRepository.findAll().isEmpty()) {
                 movies.addAll(movieRepository.findAll());
             }
             else

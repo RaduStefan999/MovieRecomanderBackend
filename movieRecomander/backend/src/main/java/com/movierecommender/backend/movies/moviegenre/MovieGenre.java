@@ -6,10 +6,12 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import java.io.Serializable;
 import java.util.Objects;
 
 @Entity
-public class MovieGenre {
+public class MovieGenre implements Serializable
+{
 
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO, generator="native")
@@ -20,6 +22,12 @@ public class MovieGenre {
     public MovieGenre() {}
     public MovieGenre(String genre) {
         this.genre = genre;
+    }
+
+    public MovieGenre(MovieGenreDTO movieGenreDTO)
+    {
+        this.id = movieGenreDTO.getId();
+        this.genre = movieGenreDTO.getGenre();
     }
 
     public Long getId() {

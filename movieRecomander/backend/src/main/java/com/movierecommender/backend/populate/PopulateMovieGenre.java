@@ -9,7 +9,6 @@ import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Component
 public class PopulateMovieGenre implements ApplicationRunner {
@@ -23,10 +22,10 @@ public class PopulateMovieGenre implements ApplicationRunner {
 
     public void run(ApplicationArguments args) {
 
-        if (Arrays.stream(args.getSourceArgs()).anyMatch(argument -> argument.equals("populate")))
+        if (Arrays.asList(args.getSourceArgs()).contains("populate"))
         {
             String[] genres = {"Drama", "Comedy", "Action", "Romantic", "Scary", "Sci-Fi", "Fantasy"};
-            List<MovieGenre> movieGenres = Arrays.stream(genres).map(genre -> new MovieGenre(genre)).collect(Collectors.toList());
+            List<MovieGenre> movieGenres = Arrays.stream(genres).map(MovieGenre::new).toList();
 
             movieGenreRepository.saveAll(movieGenres);
         }

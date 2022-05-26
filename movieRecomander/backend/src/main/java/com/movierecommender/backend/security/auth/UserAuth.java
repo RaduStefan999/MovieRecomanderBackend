@@ -5,10 +5,11 @@ import com.movierecommender.backend.users.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.io.Serializable;
 import java.util.Collection;
 
-public class UserAuth implements UserDetails {
-
+public class UserAuth implements UserDetails, Serializable
+{
     User user;
 
     public UserAuth(User user) {

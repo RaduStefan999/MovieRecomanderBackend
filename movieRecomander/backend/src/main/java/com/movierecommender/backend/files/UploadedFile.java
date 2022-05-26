@@ -1,7 +1,5 @@
 package com.movierecommender.backend.files;
 
-
-import org.apache.tomcat.jni.File;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.Entity;
@@ -82,21 +80,22 @@ public class UploadedFile {
     }
 
     public byte[] getFileData() {
-        try {
+        try
+        {
             return Files.readAllBytes(Paths.get(this.filePathOnServer));
+        } catch (IOException e)
+        {
+            return new byte[0];
         }
-        catch (IOException e) {
-            e.printStackTrace();
-        }
-        return new byte[0];
+
     }
 
     public void deleteFileData() {
-        try {
+
+        try
+        {
             Files.delete(Paths.get(this.filePathOnServer));
-        }
-        catch (IOException e) {
-            e.printStackTrace();
-        }
+        } catch (IOException ignored)
+        {}
     }
 }

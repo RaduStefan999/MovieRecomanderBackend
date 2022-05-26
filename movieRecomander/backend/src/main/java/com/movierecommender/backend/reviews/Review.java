@@ -7,10 +7,12 @@ import com.movierecommender.backend.users.user.AppUser;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Objects;
 
 @Entity
-public class Review {
+public class Review implements Serializable
+{
 
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO, generator="native")
@@ -32,6 +34,13 @@ public class Review {
     public Review() {
     }
 
+    public Review(ReviewDTO reviewDTO)
+    {
+        this.appUser = reviewDTO.getAppUser();
+        this.movie = reviewDTO.getMovie();
+        this.reviewValue = reviewDTO.getReviewValue();
+    }
+
     public Review(AppUser appUser, Movie movie, Integer reviewValue) {
         this.appUser = appUser;
         this.movie = movie;
@@ -49,6 +58,12 @@ public class Review {
         this.appUser = review.appUser;
         this.movie = review.movie;
         this.reviewValue = review.reviewValue;
+    }
+
+    public void update(ReviewDTO reviewDTO) {
+        this.appUser = reviewDTO.getAppUser();
+        this.movie = reviewDTO.getMovie();
+        this.reviewValue = reviewDTO.getReviewValue();
     }
 
     public Long getId() {

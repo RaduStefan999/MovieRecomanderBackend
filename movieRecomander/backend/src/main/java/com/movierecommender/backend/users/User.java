@@ -1,52 +1,51 @@
 package com.movierecommender.backend.users;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.movierecommender.backend.users.user.AppUser;
-import com.movierecommender.backend.users.user.AppUserUpdateModel;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
+import java.io.Serializable;
 import java.util.Objects;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
-public abstract class User {
+public abstract class User implements Serializable
+{
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO, generator="native")
     @GenericGenerator(name = "native", strategy = "native")
-
-    private Long id;
+    protected Long id;
 
     @NotBlank(message="Email is mandatory")
     @Pattern(regexp="^[A-Za-z0-9+_.-]+@(.+)$", message = "cd")
-    private String email;
+    protected String email;
 
     @NotBlank(message="Name is mandatory")
-    private String name;
+    protected String name;
 
     @Pattern(regexp="(.)*.{8,20}$",message="length must be 8")
     @NotBlank(message="Password is mandatory")
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    private String password; //password that will be stored as hash
+    protected String password; //password that will be stored as hash
 
     @NotBlank(message="Role is mandatory")
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private String role;
+    protected String role;
 
-    public User() {}
+    protected User() {}
 
-    public User(String role) { this.role = role; }
+    protected User(String role) { this.role = role; }
 
-    public User(String email, String name, String password, String role) {
+    protected User(String email, String name, String password, String role) {
         this.email = email;
         this.name = name;
         this.password = password;
         this.role = role;
     }
 
-    public User(Long id, String email, String name, String password, String role) {
+    protected User(Long id, String email, String name, String password, String role) {
         this.id = id;
         this.email = email;
         this.name = name;

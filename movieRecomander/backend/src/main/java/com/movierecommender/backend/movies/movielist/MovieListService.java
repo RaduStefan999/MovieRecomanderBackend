@@ -1,4 +1,4 @@
-package com.movierecommender.backend.movies.profiler;
+package com.movierecommender.backend.movies.movielist;
 
 import com.movierecommender.backend.movies.movie.Movie;
 import com.movierecommender.backend.movies.movie.MovieRepository;

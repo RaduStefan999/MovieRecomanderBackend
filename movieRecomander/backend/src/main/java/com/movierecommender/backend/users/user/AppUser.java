@@ -10,14 +10,16 @@ import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Transient;
-import javax.transaction.Transactional;
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.Period;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
 @PrimaryKeyJoinColumn(name = "userId")
-public class AppUser extends User {
+public class AppUser extends User implements Serializable
+{
     private String gender;
     private LocalDate birthdate;
     private String country;
@@ -27,8 +29,23 @@ public class AppUser extends User {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Integer age;
 
+    @OneToMany(mappedBy = "appUser")
+    private Set<Review> ratings;
+    @OneToMany(mappedBy = "appUser")
+    private Set<Comment> comments;
+
     public AppUser() {
         super(String.valueOf(UserRoles.USER));
+    }
+
+    public AppUser(AppUserDTO appUserDTO)
+    {
+        super(appUserDTO.getEmail(), appUserDTO.getName(), appUserDTO.getPassword(), String.valueOf(UserRoles.USER));
+        this.gender = appUserDTO.getGender();
+        this.birthdate = appUserDTO.getBirthdate();
+        this.country = appUserDTO.getCountry();
+        this.phoneNumber = appUserDTO.getPhoneNumber();
+        this.profileImageLink = appUserDTO.getProfileImageLink();
     }
 
     public AppUser(String gender, LocalDate birthdate, String country, String phoneNumber, String profileImageLink) {
@@ -102,9 +119,31 @@ public class AppUser extends User {
         this.profileImageLink = profileImageLink;
     }
 
-    @Transactional
-    public void updateAppUser() {
+    public void setAge(Integer age)
+    {
+        this.age = age;
     }
+
+    public Set<Review> getRatings()
+    {
+        return ratings;
+    }
+
+    public void setRatings(Set<Review> ratings)
+    {
+        this.ratings = ratings;
+    }
+
+    public Set<Comment> getComments()
+    {
+        return comments;
+    }
+
+    public void setComments(Set<Comment> comments)
+    {
+        this.comments = comments;
+    }
+
 
     @Override
     public String toString() {
@@ -117,10 +156,19 @@ public class AppUser extends User {
                 '}';
     }
 
-    @OneToMany(mappedBy = "appUser")
-    Set<Review> ratings;
+    @Override
+    public boolean equals(Object o)
+    {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        AppUser appUser = (AppUser) o;
+        return Objects.equals(gender, appUser.gender) && Objects.equals(birthdate, appUser.birthdate) && Objects.equals(country, appUser.country) && Objects.equals(phoneNumber, appUser.phoneNumber) && Objects.equals(profileImageLink, appUser.profileImageLink) && Objects.equals(age, appUser.age) && Objects.equals(ratings, appUser.ratings) && Objects.equals(comments, appUser.comments);
+    }
 
-    @OneToMany(mappedBy = "appUser")
-    Set<Comment> comments;
-
+    @Override
+    public int hashCode()
+    {
+        return Objects.hash(super.hashCode(), gender, birthdate, country, phoneNumber, profileImageLink, age, ratings, comments);
+    }
 }

@@ -1,10 +1,8 @@
 package com.movierecommender.backend.users.user;
 
 import com.movierecommender.backend.advice.BusinessException;
-import com.movierecommender.backend.comments.Comment;
 import com.movierecommender.backend.identity.IdentityService;
 import com.movierecommender.backend.security.config.UserRoles;
-import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -37,8 +35,8 @@ public class AppUserController {
 
     @PostMapping(path = "register")
     @ResponseStatus(code = HttpStatus.CREATED, reason = "CREATED")
-    public void registerUser(@Valid @RequestBody AppUser appUser) {
-        appUserService.addNewAppUser(appUser);
+    public void registerUser(@Valid @RequestBody AppUserDTO appUserDTO) {
+        appUserService.addNewAppUser(new AppUser(appUserDTO));
     }
 
     @GetMapping("/{id}")

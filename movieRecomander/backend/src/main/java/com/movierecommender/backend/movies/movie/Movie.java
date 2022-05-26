@@ -6,6 +6,7 @@ import com.movierecommender.backend.reviews.Review;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
@@ -13,7 +14,8 @@ import java.util.Set;
 
 @Entity
 @PrimaryKeyJoinColumn(name = "movieId")
-public class Movie {
+public class Movie implements Serializable
+{
     @GeneratedValue(strategy= GenerationType.AUTO, generator="native")
     @GenericGenerator(name = "native", strategy = "native")
     @Id
@@ -22,7 +24,6 @@ public class Movie {
     private String summary;
     private String description;
     private Integer ageRestriction;
-    //private List<String> tags = new ArrayList<>();
     @ManyToMany
     private List<MovieGenre> movieGenres;
     private LocalDate releaseDate;
@@ -33,10 +34,10 @@ public class Movie {
     private String thumbnailLink;
 
     @OneToMany(mappedBy = "movie")
-    Set<Review> ratings;
+    private Set<Review> ratings;
 
     @OneToMany(mappedBy = "movie")
-    Set<Comment> comments;
+    private Set<Comment> comments;
 
     public Movie() {
     }
@@ -56,12 +57,22 @@ public class Movie {
         this.thumbnailLink = thumbnailLink;
         this.ratings = ratings;
         this.comments = comments;
+    }
 
-        /**String[] words = name.split("\\s");
-        //this.tags.addAll(words);
-        for(MovieGenre genre : movieGenres){
-            this.tags.add(genre.getGenre());
-        }*/
+    public Movie(MovieDTO movieDTO)
+    {
+        this.name = movieDTO.getName();
+        this.summary = movieDTO.getSummary();
+        this.description = movieDTO.getDescription();
+        this.ageRestriction = movieDTO.getAgeRestriction();
+        this.movieGenres = movieDTO.getMovieGenres();
+        this.releaseDate = movieDTO.getReleaseDate();
+        this.duration = movieDTO.getDuration();
+        this.trailerLink = movieDTO.getTrailerLink();
+        this.movieLink = movieDTO.getMovieLink();
+        this.thumbnailLink = movieDTO.getThumbnailLink();
+        this.ratings = movieDTO.ratings;
+        this.comments = movieDTO.comments;
     }
 
     public Long getId() {
@@ -168,18 +179,17 @@ public class Movie {
         this.comments = comments;
     }
 
-    public void update(Movie movie) {
-        this.name = movie.name;
-        this.summary = movie.summary;
-        this.description = movie.description;
-        this.ageRestriction = movie.ageRestriction;
-        this.movieGenres = movie.movieGenres;
-        this.releaseDate = movie.releaseDate;
-        this.duration = movie.duration;
-        this.trailerLink = movie.trailerLink;
-        this.movieLink = movie.movieLink;
+    public void update(MovieDTO movieDTO) {
+        this.name = movieDTO.getName();
+        this.summary = movieDTO.getSummary();
+        this.description = movieDTO.getDescription();
+        this.ageRestriction = movieDTO.getAgeRestriction();
+        this.movieGenres = movieDTO.getMovieGenres();
+        this.releaseDate = movieDTO.getReleaseDate();
+        this.duration = movieDTO.getDuration();
+        this.trailerLink = movieDTO.getTrailerLink();
+        this.movieLink = movieDTO.getMovieLink();
     }
-
 
     @Override
     public boolean equals(Object o) {

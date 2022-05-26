@@ -8,9 +8,6 @@ import org.springframework.context.annotation.Configuration;
 public class FileConfig {
     private String fileStorePath;
 
-    public FileConfig() {
-    }
-
     public String getFileStorePath() {
         return fileStorePath;
     }

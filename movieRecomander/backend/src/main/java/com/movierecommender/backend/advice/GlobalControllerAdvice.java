@@ -1,5 +1,6 @@
 package com.movierecommender.backend.advice;
 
+import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +18,7 @@ public class GlobalControllerAdvice extends ResponseEntityExceptionHandler {
                                                                   HttpHeaders headers, HttpStatus status,
                                                                   WebRequest request) {
 
-        String[] errorsSummary = exception.getAllErrors().stream().map(err -> err.getDefaultMessage()).toArray(String[]::new);
+        String[] errorsSummary = exception.getAllErrors().stream().map(DefaultMessageSourceResolvable::getDefaultMessage).toArray(String[]::new);
 
         return new ResponseEntity<>(new ErrorsAdvice("Validation Error", exception.getBindingResult().toString(),
                 errorsSummary), HttpStatus.BAD_REQUEST);

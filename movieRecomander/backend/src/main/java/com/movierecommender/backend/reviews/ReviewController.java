@@ -16,6 +16,9 @@ import java.util.List;
 public class ReviewController {
     private final ReviewRepository reviewRepository;
     private final IdentityService identityService;
+    private static final String INVALID_PERMISSION = "Invalid permission";
+    private static final String INVALID_DATA = "Invalid data";
+    private static final String REVIEW_NOT_FOUND = "Review not found";
 
     @Autowired
     public ReviewController(ReviewRepository reviewRepository, IdentityService identityService) {
@@ -32,13 +35,13 @@ public class ReviewController {
     @PostMapping
     @PreAuthorize("hasAnyRole('ROLE_USER')")
     @ResponseStatus(code = HttpStatus.CREATED, reason = "CREATED")
-    public void post(@RequestBody Review review) {
+    public void post(@RequestBody ReviewDTO reviewDTO) {
         var currentAppUser = this.identityService.getLoggedInAppUser();
         if (currentAppUser.isEmpty()) {
-            throw new BusinessException("Could not find current app user", "Invalid permission", HttpStatus.FORBIDDEN);
+            throw new BusinessException("Could not find current app user", INVALID_PERMISSION, HttpStatus.FORBIDDEN);
         }
-        review.setAppUser(currentAppUser.get());
-        reviewRepository.save(review);
+        reviewDTO.setAppUser(currentAppUser.get());
+        reviewRepository.save(new Review(reviewDTO));
     }
 
     @GetMapping("/{id}")
@@ -46,7 +49,7 @@ public class ReviewController {
     public ResponseEntity<Review> read(@PathVariable("id") Long id) {
         var foundReview = reviewRepository.findById(id);
         if (foundReview.isEmpty()) {
-            throw new BusinessException("Review not found", "Invalid data", HttpStatus.NOT_FOUND);
+            throw new BusinessException(REVIEW_NOT_FOUND, INVALID_DATA, HttpStatus.NOT_FOUND);
         }
         return ResponseEntity.ok(foundReview.get());
     }
@@ -54,17 +57,17 @@ public class ReviewController {
     @PutMapping("/{id}")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
     @ResponseStatus(code = HttpStatus.NO_CONTENT, reason = "UPDATED")
-    public void update(@PathVariable("id") Long id, @RequestBody Review review) {
+    public void update(@PathVariable("id") Long id, @RequestBody ReviewDTO reviewDTO) {
         var foundReview = reviewRepository.findById(id);
         if (foundReview.isEmpty()) {
-            throw new BusinessException("Review not found", "Invalid data", HttpStatus.NOT_FOUND);
+            throw new BusinessException(REVIEW_NOT_FOUND, INVALID_DATA, HttpStatus.NOT_FOUND);
         }
 
-        if (!this.userCanModify(foundReview.get())) {
-            throw new BusinessException("User can't modify this", "Invalid permission", HttpStatus.FORBIDDEN);
+        if (this.userCanModify(foundReview.get())) {
+            throw new BusinessException("User can't modify this", INVALID_PERMISSION, HttpStatus.FORBIDDEN);
         }
 
-        foundReview.get().update(review);
+        foundReview.get().update(reviewDTO);
     }
 
     @DeleteMapping("/{id}")
@@ -73,11 +76,11 @@ public class ReviewController {
     public void delete(@PathVariable("id") Long id) {
         var foundReview = reviewRepository.findById(id);
         if (foundReview.isEmpty()) {
-            throw new BusinessException("Review not found", "Invalid data", HttpStatus.NOT_FOUND);
+            throw new BusinessException(REVIEW_NOT_FOUND, INVALID_DATA, HttpStatus.NOT_FOUND);
         }
 
-        if (!this.userCanModify(foundReview.get())) {
-            throw new BusinessException("User can't modify this", "Invalid permission", HttpStatus.FORBIDDEN);
+        if (this.userCanModify(foundReview.get())) {
+            throw new BusinessException("User can't modify this", INVALID_PERMISSION, HttpStatus.FORBIDDEN);
         }
 
         reviewRepository.delete(foundReview.get());
@@ -86,11 +89,8 @@ public class ReviewController {
     private boolean userCanModify(Review review) {
         var currentUser = this.identityService.getLoggedInUser();
 
-        return (currentUser.isPresent() &&
-            (
-                UserRoles.valueOf(currentUser.get().getRole()) == UserRoles.ADMIN ||
-                !currentUser.get().equals(review.getAppUser())
-            )
-        );
+        return (currentUser.isEmpty() ||
+                (UserRoles.valueOf(currentUser.get().getRole()) != UserRoles.ADMIN &&
+                        currentUser.get().equals(review.getAppUser())));
     }
 }

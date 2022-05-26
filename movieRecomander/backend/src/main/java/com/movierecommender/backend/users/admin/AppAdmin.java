@@ -5,10 +5,12 @@ import com.movierecommender.backend.security.config.UserRoles;
 
 import javax.persistence.Entity;
 import javax.persistence.PrimaryKeyJoinColumn;
+import java.io.Serializable;
 
 @Entity
 @PrimaryKeyJoinColumn(name = "userId")
-public class AppAdmin extends User {
+public class AppAdmin extends User implements Serializable
+{
     public AppAdmin() {
         super(String.valueOf(UserRoles.ADMIN));
     }

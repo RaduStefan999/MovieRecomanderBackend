@@ -43,7 +43,6 @@ public class FileService {
             return fileId;
         }
         catch (IOException e) {
-            e.printStackTrace();
             throw new BusinessException("Could not write file", "IO exception", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

@@ -7,11 +7,13 @@ import com.movierecommender.backend.users.user.AppUser;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Objects;
 
 @Entity
-public class Comment {
+public class Comment implements Serializable
+{
 
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO, generator="native")
@@ -33,19 +35,19 @@ public class Comment {
     public Comment() {
     }
 
-    public Comment(Long id, String text, LocalDate commentDate, AppUser appUser, Movie movie) {
-        this.id = id;
-        this.text = text;
-        this.commentDate = commentDate;
-        this.appUser = appUser;
-        this.movie = movie;
+    public Comment(CommentDTO commentDTO) {
+        this.id = commentDTO.getId();
+        this.text = commentDTO.getText();
+        this.commentDate = commentDTO.getCommentDate();
+        this.appUser = commentDTO.getAppUser();
+        this.movie = commentDTO.getMovie();
     }
 
-    public void update(Comment comment) {
-        this.text = comment.text;
-        this.commentDate = comment.commentDate;
-        this.appUser = comment.appUser;
-        this.movie = comment.movie;
+    public void update(CommentDTO commentDTO) {
+        this.text = commentDTO.getText();
+        this.commentDate = commentDTO.getCommentDate();
+        this.appUser = commentDTO.getAppUser();
+        this.movie = commentDTO.getMovie();
     }
 
     public Long getId() {

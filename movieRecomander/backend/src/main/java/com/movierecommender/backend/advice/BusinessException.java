@@ -3,8 +3,8 @@ package com.movierecommender.backend.advice;
 import org.springframework.http.HttpStatus;
 
 public class BusinessException extends IllegalStateException {
-    private String errorType;
-    private HttpStatus httpStatus;
+    private final String errorType;
+    private final HttpStatus httpStatus;
 
     public BusinessException(String message, String errorType, HttpStatus httpStatus) {
         super(message);
@@ -16,16 +16,8 @@ public class BusinessException extends IllegalStateException {
         return errorType;
     }
 
-    public void setErrorType(String errorType) {
-        this.errorType = errorType;
-    }
-
     public HttpStatus getHttpStatus() {
         return httpStatus;
-    }
-
-    public void setHttpStatus(HttpStatus httpStatus) {
-        this.httpStatus = httpStatus;
     }
 
     public String[] getMessageArray() {

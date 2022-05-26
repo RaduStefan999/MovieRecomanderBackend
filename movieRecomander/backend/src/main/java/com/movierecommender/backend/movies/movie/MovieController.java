@@ -8,11 +8,12 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/v1/movies")
 public class MovieController {
-    private MovieRepository movieRepository;
+    private final MovieRepository movieRepository;
 
     @Autowired
     public MovieController(MovieRepository movieRepository){
@@ -31,23 +32,24 @@ public class MovieController {
         if (movieRepository.findById(id).isEmpty()) {
             throw new BusinessException("Movie not found", "Invalid data", HttpStatus.NOT_FOUND);
         }
-        return ResponseEntity.ok(movieRepository.findById(id).get());
+        Optional<Movie> movie = movieRepository.findById(id);
+        return ResponseEntity.ok(movie.orElse(null));
     }
 
     @PostMapping
     @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     @ResponseStatus(code = HttpStatus.CREATED, reason = "CREATED")
-    public void addMovie(@RequestBody Movie movie){ movieRepository.save(movie); }
+    public void addMovie(@RequestBody MovieDTO movieDTO){ movieRepository.save(new Movie(movieDTO)); }
 
     @PutMapping("/{id}")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     @ResponseStatus(code = HttpStatus.NO_CONTENT, reason = "UPDATED")
-    public void updateMovie(@PathVariable("id") Long id, @RequestBody Movie movie){
+    public void updateMovie(@PathVariable("id") Long id, @RequestBody MovieDTO movieDTO){
         var foundMovie = movieRepository.findById(id);
         if(foundMovie.isEmpty()){
             throw new BusinessException("Movie not found", "Invalid data", HttpStatus.NOT_FOUND);
         }
-        foundMovie.get().update(movie);
+        foundMovie.get().update(movieDTO);
     }
 
     @DeleteMapping("/{id}")

@@ -9,9 +9,8 @@ import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
 import java.time.Duration;
+import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class MLRecommenderService {
@@ -28,39 +27,32 @@ public class MLRecommenderService {
     public List<Movie> getRecommendation(long userId, int nrOfMovies) {
         var allMovies = movieRepository.findAll();
 
-        Optional<List<Long>> movieIds = this.getMlRecommendation(userId, nrOfMovies)
+        List<Long> movieIds = this.getMlRecommendation(userId, nrOfMovies)
                 .timeout(Duration.ofSeconds(mlRecommenderConfig.getMlTimeout()))
-                .onErrorReturn(Optional.empty()).block();
+                .onErrorReturn(Collections.emptyList()).block();
 
-        if (movieIds != null && movieIds.isPresent()) {
+        if (movieIds != null && !movieIds.isEmpty()) {
 
-            var recommendedMovies = allMovies.stream().filter(movie -> movieIds.get().contains(movie.getId()))
+            var recommendedMovies = allMovies.stream().filter(movie -> movieIds.contains(movie.getId()))
                                                 .toList();
 
-            if (recommendedMovies.size() != 0) {
+            if (recommendedMovies.isEmpty())
                 return recommendedMovies;
-            }
-
-            System.out.println("ML microservice provided no movies");
-            System.out.println("All hope is not yet lost --- trying backend fallback");
-            return getFallbackRecommendation(userId, nrOfMovies);
         }
 
-        System.out.println("ML microservice failed to provide prediction");
-        System.out.println("All hope is not yet lost --- trying backend fallback");
-        return getFallbackRecommendation(userId, nrOfMovies);
+        return getFallbackRecommendation(nrOfMovies);
     }
 
-    private Mono<Optional<List<Long>>> getMlRecommendation(long userId, int nrOfMovies) {
+    private Mono<List<Long>> getMlRecommendation(long userId, int nrOfMovies) {
         WebClient mlMicroservice = WebClient.create(mlRecommenderConfig.getMlURI());
 
         return mlMicroservice.get()
                 .uri(mlRecommenderConfig.getMlURI() + "/prediction?user_id=" + userId + "&movies_nr=" + nrOfMovies)
                 .retrieve()
-                .bodyToMono(new ParameterizedTypeReference<Optional<List<Long>>>() {});
+                .bodyToMono(new ParameterizedTypeReference<>(){});
     }
 
-    private List<Movie> getFallbackRecommendation(long userId, int nrOfMovies) {
+    private List<Movie> getFallbackRecommendation(int nrOfMovies) {
         return movieRepository.findAll().stream().limit(nrOfMovies).toList();
     }
 }

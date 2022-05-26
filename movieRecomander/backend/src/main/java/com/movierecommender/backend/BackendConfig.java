@@ -8,9 +8,6 @@ import org.springframework.context.annotation.Configuration;
 public class BackendConfig {
     private String selfURI;
 
-    public BackendConfig() {
-    }
-
     public String getSelfURI() {
         return selfURI;
     }
