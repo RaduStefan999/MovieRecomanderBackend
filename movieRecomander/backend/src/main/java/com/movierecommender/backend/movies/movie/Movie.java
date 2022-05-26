@@ -1,5 +1,6 @@
 package com.movierecommender.backend.movies.movie;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.movierecommender.backend.comments.Comment;
 import com.movierecommender.backend.movies.moviegenre.MovieGenre;
 import com.movierecommender.backend.reviews.Review;
@@ -10,6 +11,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Entity
 @PrimaryKeyJoinColumn(name = "movieId")
@@ -26,6 +28,9 @@ public class Movie {
     private List<MovieGenre> movieGenres;
     private LocalDate releaseDate;
     private Integer duration;
+    @Transient
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    private Double averageRatingStars;
 
     private String trailerLink;
     private String movieLink;
@@ -159,6 +164,18 @@ public class Movie {
 
     public void setComments(Set<Comment> comments) {
         this.comments = comments;
+    }
+
+    public Double getAverageRatingStars() {
+        int totalRatings = this.ratings.stream().map(Review::getReviewValue).
+                mapToInt(Integer::intValue).sum();
+        int nrOfRatings = this.ratings.size();
+
+        if (nrOfRatings <= 0) {
+            return 0.0;
+        }
+
+        return (double)totalRatings / nrOfRatings;
     }
 
     public void update(Movie movie) {
