@@ -15,9 +15,9 @@ import java.util.Set;
 @RequestMapping("/api/v1/movies")
 public class MovieController {
 
-    @Autowired
-    private MovieRepository movieRepository;
+    private final MovieRepository movieRepository;
 
+    @Autowired
     public MovieController(MovieRepository movieRepository){
         this.movieRepository = movieRepository;
     }
