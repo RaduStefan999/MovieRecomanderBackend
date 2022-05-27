@@ -172,7 +172,7 @@ public class Movie {
         int nrOfRatings = this.ratings.size();
 
         if (nrOfRatings <= 0) {
-            return 0.0;
+            return 1.0;
         }
 
         return (double)totalRatings / nrOfRatings;

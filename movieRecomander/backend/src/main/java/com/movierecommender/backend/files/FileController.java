@@ -52,7 +52,7 @@ public class FileController {
     }
 
     @GetMapping("/{fileIdName}")
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
+    //@PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
     public ResponseEntity<Resource> download(@PathVariable String fileIdName) {
         Optional<UploadedFile> foundFileOnServer = fileService.download(fileIdName);
 
