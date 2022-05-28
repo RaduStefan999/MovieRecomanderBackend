@@ -1,12 +1,17 @@
 package com.movierecommender.backend.movies.movie;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.movierecommender.backend.comments.Comment;
 import com.movierecommender.backend.movies.moviegenre.MovieGenre;
 import com.movierecommender.backend.reviews.Review;
 import org.hibernate.annotations.GenericGenerator;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
@@ -20,21 +25,43 @@ public class Movie {
     @GenericGenerator(name = "native", strategy = "native")
     @Id
     private Long id;
+
+    @NotBlank(message="Movie name is mandatory")
     private String name;
+
+    @Column(length = 5000)
+    @Size(max = 5000)
     private String summary;
-    @Column(length = 12000)
+
+    @Column(length = 5000)
+    @Size(max = 5000)
     private String description;
+
     private Integer ageRestriction;
+
     @ManyToMany
     private List<MovieGenre> movieGenres;
+
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate releaseDate;
+
     private Integer duration;
+
     @Transient
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Double averageRatingStars;
 
+    @Pattern(regexp =
+            "^https?:\\/\\/(?:www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{1,255}\\.[a-zA-Z0-9()]{1,6}\\b(?:[-a-zA-Z0-9()@:%_\\+.~#?&\\/=]*)$")
     private String trailerLink;
+
+    @Pattern(regexp =
+            "^https?:\\/\\/(?:www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{1,255}\\.[a-zA-Z0-9()]{1,6}\\b(?:[-a-zA-Z0-9()@:%_\\+.~#?&\\/=]*)$")
     private String movieLink;
+
+    @Pattern(regexp =
+            "^https?:\\/\\/(?:www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{1,255}\\.[a-zA-Z0-9()]{1,6}\\b(?:[-a-zA-Z0-9()@:%_\\+.~#?&\\/=]*)$")
     private String thumbnailLink;
 
     @OneToMany(mappedBy = "movie")

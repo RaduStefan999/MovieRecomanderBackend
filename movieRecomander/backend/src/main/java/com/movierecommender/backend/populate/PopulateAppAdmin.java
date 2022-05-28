@@ -28,11 +28,11 @@ public class PopulateAppAdmin implements ApplicationRunner {
         if (Arrays.stream(args.getSourceArgs()).anyMatch(argument -> argument.equals("populate")))
         {
             AppAdmin admin1 = new AppAdmin("ionescuandrei@gmail.com","Ionescu Andrei",
-                     passwordEncoder.encode("ContAdmin1"));
+                     passwordEncoder.encode("cContAdmin1##"));
             AppAdmin admin2 = new AppAdmin("popescualexandra21@gmail.com","Popescu Alexandra",
-                    passwordEncoder.encode("ContAdmin2"));
+                    passwordEncoder.encode("cContAdmin2##"));
             AppAdmin admin3 = new AppAdmin("georgescudaniel13@gmail.com","Georgescu Daniel",
-                    passwordEncoder.encode("ContAdmin3"));
+                    passwordEncoder.encode("cContAdmin3##"));
 
             appAdminRepository.save(admin1);
             appAdminRepository.save(admin2);

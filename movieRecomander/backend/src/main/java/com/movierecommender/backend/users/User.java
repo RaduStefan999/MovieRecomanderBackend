@@ -14,11 +14,12 @@ public abstract class User {
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO, generator="native")
     @GenericGenerator(name = "native", strategy = "native")
-
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Long id;
 
     @NotBlank(message="Email is mandatory")
-    @Pattern(regexp="^(?=.{5,30})[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,5}$\n", message = "cd")
+    //@Pattern(regexp="^(?=.{5,30})[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,5}$", message = "cd")
+    //@Pattern(regexp = "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$")
     private String email;
 
     @NotBlank(message="Name is mandatory")
@@ -26,10 +27,11 @@ public abstract class User {
     private String name;
 
     @NotBlank(message="Password is mandatory")
-    @Pattern(regexp ="^(?=.*[A-Za-z])(?=.*\\d)(?=.*[@$!%*#?&])[A-Za-z\\d@$!%*#?&_]{10,50}$")
+    //@Pattern(regexp ="^(?=.*[A-Za-z])(?=.*\\d)(?=.*[@$!%*#?&])[A-Za-z\\d@$!%*#?&_]{10,50}$")
+    @Pattern(regexp = "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$")
     private String password; //password that will be stored as hash
 
-    @NotBlank(message="Role is mandatory")
+    //@NotBlank(message="Role is mandatory")
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private String role;
 

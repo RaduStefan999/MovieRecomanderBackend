@@ -56,7 +56,7 @@ public class AppUserController {
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
     @ResponseStatus(code = HttpStatus.NO_CONTENT, reason = "UPDATED")
     public void update(@RequestBody AppUserUpdateModel appUserUpdateModel, @PathVariable Long id) {
-
+        ///appuserModel.isValid()
         if (!this.userCanModify(id)) {
             throw new BusinessException("User can't modify this", "Invalid permission", HttpStatus.FORBIDDEN);
         }
