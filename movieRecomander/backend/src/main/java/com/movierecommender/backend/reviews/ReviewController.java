@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -32,7 +33,7 @@ public class ReviewController {
     @PostMapping
     @PreAuthorize("hasAnyRole('ROLE_USER')")
     @ResponseStatus(code = HttpStatus.CREATED, reason = "CREATED")
-    public void post(@RequestBody Review review) {
+    public void post(@Valid @RequestBody Review review) {
         var currentAppUser = this.identityService.getLoggedInAppUser();
         if (currentAppUser.isEmpty()) {
             throw new BusinessException("Could not find current app user", "Invalid permission", HttpStatus.FORBIDDEN);
@@ -54,7 +55,7 @@ public class ReviewController {
     @PutMapping("/{id}")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
     @ResponseStatus(code = HttpStatus.NO_CONTENT, reason = "UPDATED")
-    public void update(@PathVariable("id") Long id, @RequestBody Review review) {
+    public void update(@PathVariable("id") Long id,@Valid @RequestBody Review review) {
         var foundReview = reviewRepository.findById(id);
         if (foundReview.isEmpty()) {
             throw new BusinessException("Review not found", "Invalid data", HttpStatus.NOT_FOUND);

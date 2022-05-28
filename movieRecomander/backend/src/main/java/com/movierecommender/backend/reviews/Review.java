@@ -6,7 +6,10 @@ import com.movierecommender.backend.movies.movie.Movie;
 import com.movierecommender.backend.users.user.AppUser;
 import org.hibernate.annotations.GenericGenerator;
 
+import javax.annotation.MatchesPattern;
 import javax.persistence.*;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import java.util.Objects;
 
 @Entity
@@ -27,6 +30,8 @@ public class Review {
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     Movie movie;
 
+    @Min(1)
+    @Max(5)
     private Integer reviewValue;
 
     public Review() {
