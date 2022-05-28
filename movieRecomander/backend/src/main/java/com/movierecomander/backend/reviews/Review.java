@@ -4,7 +4,10 @@ import com.movierecomander.backend.movies.movie.Movie;
 import com.movierecomander.backend.users.user.AppUser;
 import org.hibernate.annotations.GenericGenerator;
 
+import javax.annotation.MatchesPattern;
 import javax.persistence.*;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import java.util.Objects;
 
 @Entity
@@ -23,6 +26,8 @@ public class Review {
     @JoinColumn(name = "movieId")
     Movie movie;
 
+    @Min(1)
+    @Max(5)
     private Integer reviewValue;
 
     public Review() {

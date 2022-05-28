@@ -5,10 +5,15 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="6a3966bb-2776-49b5-87f0-7896d390addf" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/f/9/f9590cd73598b6f2427c8b1327d922c50d1dc504" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/index.pb" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sonarlint/issuestore/index.pb" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/movierecomander/backend/movies/movie/MovieSearchController.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/movierecomander/backend/movies/moviesearch/MovieSearchController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/movierecomander/backend/movies/movie/MovieSearchService.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/movierecomander/backend/movies/moviesearch/MovieSearchService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/backend/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/movierecomander/backend/comments/CommentController.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/movierecomander/backend/comments/CommentController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/movierecomander/backend/movies/moviegenre/MovieGenre.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/movierecomander/backend/movies/moviegenre/MovieGenre.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/movierecomander/backend/movies/moviesearch/MovieSearchController.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/movierecomander/backend/movies/moviesearch/MovieSearchController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/movierecomander/backend/reviews/Review.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/movierecomander/backend/reviews/Review.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/movierecomander/backend/reviews/ReviewController.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/movierecomander/backend/reviews/ReviewController.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -51,26 +56,13 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/backend" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.tslint" value="true" />
     <property name="node.js.selected.package.eslint" value="(autodetect)" />
     <property name="node.js.selected.package.tslint" value="(autodetect)" />
   </component>
   <component name="RunManager">
-    <configuration default="true" type="JetRunConfigurationType">
-      <module name="movieRecomander" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType">
-      <module name="movieRecomander" />
-      <option name="filePath" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
     <configuration name="BackendApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
       <module name="backend" />
       <option name="SPRING_BOOT_MAIN_CLASS" value="com.movierecomander.backend.BackendApplication" />
@@ -91,6 +83,10 @@
       <workItem from="1649928540984" duration="83000" />
       <workItem from="1649928679069" duration="4000" />
       <workItem from="1651470671914" duration="17000" />
+      <workItem from="1652792534653" duration="626000" />
+      <workItem from="1653221237282" duration="50000" />
+      <workItem from="1653745494226" duration="2814000" />
+      <workItem from="1653748439505" duration="648000" />
     </task>
     <servers />
   </component>

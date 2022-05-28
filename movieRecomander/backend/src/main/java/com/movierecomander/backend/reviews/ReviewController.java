@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -23,7 +24,7 @@ public class ReviewController {
     }
 
     @PostMapping("/")
-    public void post(@RequestBody Review review) {
+    public void post(@Valid @RequestBody Review review) {
         reviewRepository.save(review);
     }
 
@@ -39,7 +40,7 @@ public class ReviewController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Boolean> update(@PathVariable("id") Long id, @RequestBody Review review) {
+    public ResponseEntity<Boolean> update(@PathVariable("id") Long id,@Valid @RequestBody Review review) {
         var foundReview = reviewRepository.findById(id);
 
         if (foundReview.isEmpty()) {

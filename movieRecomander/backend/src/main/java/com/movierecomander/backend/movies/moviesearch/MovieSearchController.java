@@ -1,6 +1,7 @@
 package com.movierecomander.backend.movies.moviesearch;
 
 import com.movierecomander.backend.movies.movie.Movie;
+import com.movierecomander.backend.movies.moviegenre.MovieGenre;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -26,7 +27,7 @@ public class MovieSearchController {
 
     @GetMapping("/genre/{movieGenres}")
     @PreAuthorize("hasAnyRole('ROLE_USER')")
-    public ResponseEntity<List<Movie>> searchMovieByGenres(List<String> movieGenres){
+    public ResponseEntity<List<Movie>> searchMovieByGenres(@PathVariable List<MovieGenre> movieGenres){
         return ResponseEntity.ok(movieSearchService.getMovieByGenres(movieGenres));
     }
 }
