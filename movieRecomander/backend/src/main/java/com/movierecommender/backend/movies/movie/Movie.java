@@ -20,6 +20,7 @@ public class Movie {
     private Long id;
     private String name;
     private String summary;
+    @Column(length = 12000)
     private String description;
     private Integer ageRestriction;
     @ManyToMany

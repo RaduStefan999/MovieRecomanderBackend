@@ -17,6 +17,7 @@ public class Comment {
     @GeneratedValue(strategy= GenerationType.AUTO, generator="native")
     @GenericGenerator(name = "native", strategy = "native")
     private Long id;
+    @Column(length = 12000)
     private String text;
     private LocalDate commentDate;
 
