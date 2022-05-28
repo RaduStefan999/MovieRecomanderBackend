@@ -1,8 +1,6 @@
 package com.movierecommender.backend.users;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.movierecommender.backend.users.user.AppUser;
-import com.movierecommender.backend.users.user.AppUserUpdateModel;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -20,15 +18,20 @@ public abstract class User {
     private Long id;
 
     @NotBlank(message="Email is mandatory")
-    @Pattern(regexp="^[A-Za-z0-9+_.-]+@(.+)$", message = "cd")
+    @Pattern(regexp="^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$")
     private String email;
 
     @NotBlank(message="Name is mandatory")
+    @Pattern(regexp ="^(?=.{2,25}$)(\\w{2,}(\\s?\\w{2,})?)$")
     private String name;
 
-    @Pattern(regexp="(.)*.{8,20}$",message="length must be 8")
+    //@Pattern(regexp="(.)*.{8,20}$",message="length must be 8")
+   // @NotBlank(message="Password is mandatory")
+    //@Pattern(regexp ="^(?=.*[A-Za-z])(?=.*\\d)(?=.*[@$!%*#?&])[A-Za-z\\d@$!%*#?&_]{10,50}$")
+    @Pattern(regexp = "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$")
     @NotBlank(message="Password is mandatory")
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+
     private String password; //password that will be stored as hash
 
     @NotBlank(message="Role is mandatory")

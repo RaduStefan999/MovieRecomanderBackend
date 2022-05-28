@@ -42,7 +42,7 @@ public class MovieController {
     public ResponseEntity<Set<Comment>> getMovieComments(@PathVariable Long id){
         var findMovie = movieRepository.findById(id);
         if (findMovie.isEmpty()) {
-            throw new BusinessException("Comment not found", "Invalid data", HttpStatus.NOT_FOUND);
+            throw new BusinessException("Movie to get comments by not found", "Invalid data", HttpStatus.NOT_FOUND);
         }
         return ResponseEntity.ok(findMovie.get().getComments());
     }
