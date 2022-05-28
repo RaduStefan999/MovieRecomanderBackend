@@ -1,6 +1,8 @@
 package com.movierecomander.backend.comments;
 
 import com.movierecomander.backend.users.user.AppUser;
+import com.movierecommender.backend.comments.Comment;
+import com.movierecommender.backend.comments.CommentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
