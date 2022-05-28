@@ -52,7 +52,7 @@ public class FileController {
     }
 
     @GetMapping("/{fileIdName}")
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
+    //@PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
     public ResponseEntity<Resource> download(@PathVariable String fileIdName) {
         Optional<UploadedFile> foundFileOnServer = fileService.download(fileIdName);
 
@@ -62,7 +62,7 @@ public class FileController {
 
         return ResponseEntity.ok()
                 .contentType(MediaType.parseMediaType(foundFileOnServer.get().getFileType()))
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename= " + foundFileOnServer.get().getFileName())
+                .header(HttpHeaders.CONTENT_DISPOSITION, "inline")
                 .body(new ByteArrayResource(foundFileOnServer.get().getFileData()));
     }
 

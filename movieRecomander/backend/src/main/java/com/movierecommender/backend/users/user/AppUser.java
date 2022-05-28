@@ -1,16 +1,20 @@
 package com.movierecommender.backend.users.user;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.movierecommender.backend.comments.Comment;
 import com.movierecommender.backend.reviews.Review;
 import com.movierecommender.backend.users.User;
 import com.movierecommender.backend.security.config.UserRoles;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Transient;
 import javax.transaction.Transactional;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.Set;
@@ -18,9 +22,21 @@ import java.util.Set;
 @Entity
 @PrimaryKeyJoinColumn(name = "userId")
 public class AppUser extends User {
+
+    @NotBlank(message="Gender is mandatory")
+    @Pattern(regexp="^(M|F)$")
     private String gender;
+
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate birthdate;
+
+    @NotBlank(message="Country is mandatory")
+    @Pattern(regexp ="^(?=.{2,25}$)(\\w{2,}(\\s?\\w{2,})?)$")
     private String country;
+
+    @NotBlank(message="Phone number is mandatory")
+    @Pattern(regexp="^07[0-9]{8}$")
     private String phoneNumber;
     private String profileImageLink;
     @Transient
