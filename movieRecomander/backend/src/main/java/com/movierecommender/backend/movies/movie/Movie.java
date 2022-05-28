@@ -13,6 +13,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -23,6 +24,7 @@ import java.util.stream.Collectors;
 public class Movie {
     @GeneratedValue(strategy= GenerationType.AUTO, generator="native")
     @GenericGenerator(name = "native", strategy = "native")
+
     @Id
     private Long id;
 
@@ -42,9 +44,10 @@ public class Movie {
     @ManyToMany
     private List<MovieGenre> movieGenres;
 
-    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    private LocalDate releaseDate;
+    //@DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+    //@JsonFormat(pattern = "yyyy-MM-dd")
+    @Pattern(regexp = "^\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$")
+    private String releaseDate;
 
     private Integer duration;
 
@@ -74,7 +77,7 @@ public class Movie {
     }
 
     public Movie(String name, String summary, String description, Integer ageRestriction,
-                 List<MovieGenre> movieGenres, LocalDate releaseDate, Integer duration, String trailerLink,
+                 List<MovieGenre> movieGenres, String releaseDate, Integer duration, String trailerLink,
                  String movieLink, String thumbnailLink, Set<Review> ratings, Set<Comment> comments) {
         this.name = name;
         this.summary = summary;
@@ -139,10 +142,11 @@ public class Movie {
     }
 
     public LocalDate getReleaseDate() {
-        return releaseDate;
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        return LocalDate.parse(releaseDate, formatter);
     }
 
-    public void setReleaseDate(LocalDate releaseDate) {
+    public void setReleaseDate(String releaseDate) {
         this.releaseDate = releaseDate;
     }
 
@@ -217,7 +221,6 @@ public class Movie {
         this.trailerLink = movie.trailerLink;
         this.movieLink = movie.movieLink;
     }
-
 
     @Override
     public boolean equals(Object o) {

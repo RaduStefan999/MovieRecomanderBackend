@@ -18,7 +18,7 @@ public abstract class User {
     private Long id;
 
     @NotBlank(message="Email is mandatory")
-    //@Pattern(regexp="^(?=.{5,30})[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,5}$", message = "cd")
+    @Pattern(regexp="^(?=.{5,30})[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,5}$", message = "Wrong email")
     //@Pattern(regexp = "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$")
     private String email;
 
@@ -26,16 +26,12 @@ public abstract class User {
     @Pattern(regexp ="^(?=.{2,25}$)(\\w{2,}(\\s?\\w{2,})?)$")
     private String name;
 
-    //@Pattern(regexp="(.)*.{8,20}$",message="length must be 8")
-   // @NotBlank(message="Password is mandatory")
     //@Pattern(regexp ="^(?=.*[A-Za-z])(?=.*\\d)(?=.*[@$!%*#?&])[A-Za-z\\d@$!%*#?&_]{10,50}$")
     @Pattern(regexp = "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$")
     @NotBlank(message="Password is mandatory")
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-
     private String password; //password that will be stored as hash
 
-    //@NotBlank(message="Role is mandatory")
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private String role;
 

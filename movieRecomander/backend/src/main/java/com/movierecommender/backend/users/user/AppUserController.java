@@ -36,12 +36,6 @@ public class AppUserController {
         return ResponseEntity.ok(appUserService.getAppUsers());
     }
 
-    @PostMapping(path = "register")
-    @ResponseStatus(code = HttpStatus.CREATED, reason = "CREATED")
-    public void registerUser(@Valid @RequestBody AppUser appUser) {
-        appUserService.addNewAppUser(appUser);
-    }
-
     @GetMapping("/{id}")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
     public ResponseEntity<AppUser> read(@PathVariable("id") Long id) {
@@ -50,6 +44,12 @@ public class AppUserController {
             throw new BusinessException("User not found", "Invalid data", HttpStatus.NOT_FOUND);
         }
         return ResponseEntity.ok(foundUser.get());
+    }
+
+    @PostMapping(path = "register")
+    @ResponseStatus(code = HttpStatus.CREATED, reason = "CREATED")
+    public void registerUser(@Valid @RequestBody AppUser appUser) {
+        appUserService.addNewAppUser(appUser);
     }
 
     @PutMapping("/{id}")

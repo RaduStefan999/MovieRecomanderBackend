@@ -18,6 +18,7 @@ public class Review {
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO, generator="native")
     @GenericGenerator(name = "native", strategy = "native")
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     Long id;
 
     @ManyToOne

@@ -13,6 +13,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
 @Entity
@@ -27,10 +28,10 @@ public class Comment {
     @Size(min = 3, max = 12000)
     private String text;
 
-    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-    @JsonFormat(pattern = "yyyy-MM-dd")
+    //@DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+    //@JsonFormat(pattern = "yyyy-MM-dd")
     @Pattern(regexp = "^\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$")
-    private LocalDate commentDate;
+    private String commentDate;
 
     @ManyToOne
     @JoinColumn(name = "userId")
@@ -46,7 +47,7 @@ public class Comment {
     public Comment() {
     }
 
-    public Comment(Long id, String text, LocalDate commentDate, AppUser appUser, Movie movie) {
+    public Comment(Long id, String text, String commentDate, AppUser appUser, Movie movie) {
         this.id = id;
         this.text = text;
         this.commentDate = commentDate;
@@ -78,10 +79,11 @@ public class Comment {
     }
 
     public LocalDate getCommentDate() {
-        return commentDate;
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        return LocalDate.parse(commentDate, formatter);
     }
 
-    public void setCommentDate(LocalDate commentDate) {
+    public void setCommentDate(String commentDate) {
         this.commentDate = commentDate;
     }
 

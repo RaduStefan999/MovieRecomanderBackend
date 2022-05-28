@@ -30,6 +30,16 @@ public class ReviewController {
         return ResponseEntity.ok(reviewRepository.findAll());
     }
 
+    @GetMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ROLE_USER')")
+    public ResponseEntity<Review> read(@PathVariable("id") Long id) {
+        var foundReview = reviewRepository.findById(id);
+        if (foundReview.isEmpty()) {
+            throw new BusinessException("Review not found", "Invalid data", HttpStatus.NOT_FOUND);
+        }
+        return ResponseEntity.ok(foundReview.get());
+    }
+
     @PostMapping
     @PreAuthorize("hasAnyRole('ROLE_USER')")
     @ResponseStatus(code = HttpStatus.CREATED, reason = "CREATED")
@@ -40,16 +50,6 @@ public class ReviewController {
         }
         review.setAppUser(currentAppUser.get());
         reviewRepository.save(review);
-    }
-
-    @GetMapping("/{id}")
-    @PreAuthorize("hasAnyRole('ROLE_USER')")
-    public ResponseEntity<Review> read(@PathVariable("id") Long id) {
-        var foundReview = reviewRepository.findById(id);
-        if (foundReview.isEmpty()) {
-            throw new BusinessException("Review not found", "Invalid data", HttpStatus.NOT_FOUND);
-        }
-        return ResponseEntity.ok(foundReview.get());
     }
 
     @PutMapping("/{id}")
