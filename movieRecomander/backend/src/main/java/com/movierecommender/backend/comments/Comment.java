@@ -24,13 +24,13 @@ public class Comment {
     @GenericGenerator(name = "native", strategy = "native")
     private Long id;
 
-    @Column(length = 12000)
-    @Size(min = 3, max = 12000)
+    @Column(length = 2000)
+    @Size(min = 3, max = 2000, message = "Max length is 2000.")
     private String text;
 
     //@DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     //@JsonFormat(pattern = "yyyy-MM-dd")
-    @Pattern(regexp = "^\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$")
+    @Pattern(regexp = "^\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$", message = "Date must be like \" yyyy-MM-dd \".")
     private String commentDate;
 
     @ManyToOne
@@ -78,7 +78,11 @@ public class Comment {
         this.text = text;
     }
 
-    public LocalDate getCommentDate() {
+    public String getCommentDate() {
+        return commentDate;
+    }
+
+    public LocalDate getInterpretedCommentDate() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         return LocalDate.parse(commentDate, formatter);
     }

@@ -29,12 +29,13 @@ import java.util.Set;
 public class AppUser extends User {
 
     @NotBlank(message="Gender is mandatory")
-    @Pattern(regexp="^(M|F)$")
+    @Pattern(regexp="^(M|F)$", message = "Gender must be M or F.")
     private String gender;
 
     //@DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     //@JsonFormat(pattern = "yyyy-mm-dd")
-    @Pattern(regexp = "^\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$")
+    @Pattern(regexp = "^\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$",
+            message = "Birthdate must be the type yyyy-MM-dd")
     private String birthdate;
 
     @NotBlank(message="Country is mandatory")
@@ -42,11 +43,12 @@ public class AppUser extends User {
     private String country;
 
     @NotBlank(message="Phone number is mandatory")
-    @Pattern(regexp="^07[0-9]{8}$")
+    @Pattern(regexp="^07[0-9]{8}$", message = "Phone number must have length 8 and start with \" 07 \". ")
     private String phoneNumber;
 
     @Pattern(regexp =
-            "^https?:\\/\\/(?:www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{1,256}\\.[a-zA-Z0-9()]{1,6}\\b(?:[-a-zA-Z0-9()@:%_\\+.~#?&\\/=]*)$")
+            "^https?:\\/\\/(?:www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{1,256}\\.[a-zA-Z0-9()]{1,6}\\b(?:[-a-zA-Z0-9()@:%_\\+.~#?&\\/=]*)$",
+            message = "String is not a valid link. It must be like \"http or https \".")
     private String profileImageLink;
 
     @Transient
@@ -67,14 +69,6 @@ public class AppUser extends User {
     public AppUser(String gender, String birthdate, String country, String phoneNumber, String profileImageLink){
         super(String.valueOf(UserRoles.USER));
         this.gender = gender;
-
-        /*try {
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-            System.out.println("sss");
-            this.birthdate = LocalDate.parse(birthdate, formatter);
-        } catch (DateTimeParseException e) {
-            throw new Error("Invalid date format");
-        }*/
         this.birthdate = birthdate;
         this.country = country;
         this.phoneNumber = phoneNumber;
@@ -85,13 +79,6 @@ public class AppUser extends User {
                    String phoneNumber, String profileImageLink) {
         super(email, name, password, String.valueOf(UserRoles.USER));
         this.gender = gender;
-        /**try {
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-            System.out.println("sss");
-            this.birthdate = LocalDate.parse(birthdate, formatter);
-        } catch (DateTimeParseException e) {
-            throw new Error("Invalid date format");
-        }*/
         this.birthdate = birthdate;
         this.country = country;
         this.phoneNumber = phoneNumber;
@@ -103,13 +90,6 @@ public class AppUser extends User {
         super(id, email, name, password, String.valueOf(UserRoles.USER));
 
         this.gender = gender;
-        /*try {
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-            System.out.println("sss");
-            this.birthdate = LocalDate.parse(birthdate, formatter);
-        } catch (DateTimeParseException e) {
-            throw new Error("Invalid date format");
-        }*/
         this.birthdate = birthdate;
         this.country = country;
         this.phoneNumber = phoneNumber;
@@ -129,19 +109,16 @@ public class AppUser extends User {
         this.gender = gender;
     }
 
-    public LocalDate getBirthdate() {
+    public String getBirthdate() {
+        return birthdate;
+    }
+
+    public LocalDate getInterpretedBirthdate() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         return LocalDate.parse(birthdate, formatter);
     }
 
     public void setBirthdate(String birthdate) {
-        /*try {
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-            System.out.println("sss");
-            this.birthdate = LocalDate.parse(birthdate, formatter);
-        } catch (DateTimeParseException e) {
-            throw new Error("Invalid date format");
-        }*/
         this.birthdate = birthdate;
     }
 
@@ -167,6 +144,15 @@ public class AppUser extends User {
 
     public void setProfileImageLink(String profileImageLink) {
         this.profileImageLink = profileImageLink;
+    }
+
+    public void isValid(){
+        try {
+            DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            LocalDate.parse(this.birthdate, dateFormatter);
+        } catch (DateTimeParseException e) {
+            throw new BusinessException("Invalid date or invalid format.", "Json Format", HttpStatus.BAD_REQUEST);
+        }
     }
 
     @Transactional

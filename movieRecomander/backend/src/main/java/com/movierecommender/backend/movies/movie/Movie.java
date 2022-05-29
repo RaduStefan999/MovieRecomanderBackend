@@ -32,11 +32,11 @@ public class Movie {
     private String name;
 
     @Column(length = 5000)
-    @Size(max = 5000)
+    @Size(max = 5000, message = "Max length is 5000.")
     private String summary;
 
     @Column(length = 5000)
-    @Size(max = 5000)
+    @Size(max = 5000, message = "Max length is 5000.")
     private String description;
 
     private Integer ageRestriction;
@@ -46,7 +46,7 @@ public class Movie {
 
     //@DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     //@JsonFormat(pattern = "yyyy-MM-dd")
-    @Pattern(regexp = "^\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$")
+    @Pattern(regexp = "^\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$", message = "Date must be like \" yyyy-MM-dd \".")
     private String releaseDate;
 
     private Integer duration;
@@ -56,15 +56,18 @@ public class Movie {
     private Double averageRatingStars;
 
     @Pattern(regexp =
-            "^https?:\\/\\/(?:www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{1,255}\\.[a-zA-Z0-9()]{1,6}\\b(?:[-a-zA-Z0-9()@:%_\\+.~#?&\\/=]*)$")
+            "^https?:\\/\\/(?:www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{1,255}\\.[a-zA-Z0-9()]{1,6}\\b(?:[-a-zA-Z0-9()@:%_\\+.~#?&\\/=]*)$",
+            message = "String is not a valid link. It must be like \"http or https \".")
     private String trailerLink;
 
     @Pattern(regexp =
-            "^https?:\\/\\/(?:www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{1,255}\\.[a-zA-Z0-9()]{1,6}\\b(?:[-a-zA-Z0-9()@:%_\\+.~#?&\\/=]*)$")
+            "^https?:\\/\\/(?:www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{1,255}\\.[a-zA-Z0-9()]{1,6}\\b(?:[-a-zA-Z0-9()@:%_\\+.~#?&\\/=]*)$",
+            message = "String is not a valid link. It must be like \"http or https \".")
     private String movieLink;
 
     @Pattern(regexp =
-            "^https?:\\/\\/(?:www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{1,255}\\.[a-zA-Z0-9()]{1,6}\\b(?:[-a-zA-Z0-9()@:%_\\+.~#?&\\/=]*)$")
+            "^https?:\\/\\/(?:www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{1,255}\\.[a-zA-Z0-9()]{1,6}\\b(?:[-a-zA-Z0-9()@:%_\\+.~#?&\\/=]*)$",
+            message = "String is not a valid link. It must be like \"http or https \".")
     private String thumbnailLink;
 
     @OneToMany(mappedBy = "movie")
@@ -141,7 +144,11 @@ public class Movie {
         this.movieGenres = movieGenres;
     }
 
-    public LocalDate getReleaseDate() {
+    public String getReleaseDate() {
+        return releaseDate;
+    }
+
+    public LocalDate getInterpretedReleaseDate() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         return LocalDate.parse(releaseDate, formatter);
     }
