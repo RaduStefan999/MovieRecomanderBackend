@@ -2,11 +2,13 @@ package com.movierecommender.backend.movies.movie;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.movierecommender.backend.advice.BusinessException;
 import com.movierecommender.backend.comments.Comment;
 import com.movierecommender.backend.movies.moviegenre.MovieGenre;
 import com.movierecommender.backend.reviews.Review;
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -14,6 +16,7 @@ import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -44,8 +47,6 @@ public class Movie {
     @ManyToMany
     private List<MovieGenre> movieGenres;
 
-    //@DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-    //@JsonFormat(pattern = "yyyy-MM-dd")
     @Pattern(regexp = "^\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$", message = "Date must be like \" yyyy-MM-dd \".")
     private String releaseDate;
 
@@ -55,25 +56,24 @@ public class Movie {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Double averageRatingStars;
 
-    @Pattern(regexp =
-            "^https?:\\/\\/(?:www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{1,255}\\.[a-zA-Z0-9()]{1,6}\\b(?:[-a-zA-Z0-9()@:%_\\+.~#?&\\/=]*)$",
-            message = "String is not a valid link. It must be like \"http or https \".")
+    @Column(length = 500)
+    @Size(max = 500, message = "Max length is 500.")
     private String trailerLink;
 
-    @Pattern(regexp =
-            "^https?:\\/\\/(?:www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{1,255}\\.[a-zA-Z0-9()]{1,6}\\b(?:[-a-zA-Z0-9()@:%_\\+.~#?&\\/=]*)$",
-            message = "String is not a valid link. It must be like \"http or https \".")
+    @Column(length = 500)
+    @Size(max = 500, message = "Max length is 500.")
     private String movieLink;
 
-    @Pattern(regexp =
-            "^https?:\\/\\/(?:www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{1,255}\\.[a-zA-Z0-9()]{1,6}\\b(?:[-a-zA-Z0-9()@:%_\\+.~#?&\\/=]*)$",
-            message = "String is not a valid link. It must be like \"http or https \".")
+    @Column(length = 500)
+    @Size(max = 500, message = "Max length is 500.")
     private String thumbnailLink;
 
     @OneToMany(mappedBy = "movie")
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     Set<Review> ratings;
 
     @OneToMany(mappedBy = "movie")
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     Set<Comment> comments;
 
     public Movie() {
@@ -203,6 +203,15 @@ public class Movie {
 
     public void setComments(Set<Comment> comments) {
         this.comments = comments;
+    }
+
+    public void isValid() {
+        try {
+            DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            LocalDate.parse(this.releaseDate, dateFormatter);
+        } catch (DateTimeParseException e) {
+            throw new BusinessException("Invalid date or invalid format.", "Json Format", HttpStatus.BAD_REQUEST);
+        }
     }
 
     public Double getAverageRatingStars() {

@@ -1,23 +1,18 @@
 package com.movierecommender.backend.users.user;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.movierecommender.backend.advice.BusinessException;
 import com.movierecommender.backend.comments.Comment;
 import com.movierecommender.backend.reviews.Review;
 import com.movierecommender.backend.users.User;
 import com.movierecommender.backend.security.config.UserRoles;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 
-import javax.persistence.Entity;
-import javax.persistence.OneToMany;
-import javax.persistence.PrimaryKeyJoinColumn;
-import javax.persistence.Transient;
+import javax.persistence.*;
 import javax.transaction.Transactional;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
@@ -32,8 +27,6 @@ public class AppUser extends User {
     @Pattern(regexp="^(M|F)$", message = "Gender must be M or F.")
     private String gender;
 
-    //@DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-    //@JsonFormat(pattern = "yyyy-mm-dd")
     @Pattern(regexp = "^\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$",
             message = "Birthdate must be the type yyyy-MM-dd")
     private String birthdate;
@@ -46,9 +39,8 @@ public class AppUser extends User {
     @Pattern(regexp="^07[0-9]{8}$", message = "Phone number must have length 8 and start with \" 07 \". ")
     private String phoneNumber;
 
-    @Pattern(regexp =
-            "^https?:\\/\\/(?:www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{1,256}\\.[a-zA-Z0-9()]{1,6}\\b(?:[-a-zA-Z0-9()@:%_\\+.~#?&\\/=]*)$",
-            message = "String is not a valid link. It must be like \"http or https \".")
+    @Column(length = 500)
+    @Size(max = 500, message = "Max length is 500.")
     private String profileImageLink;
 
     @Transient
@@ -101,8 +93,7 @@ public class AppUser extends User {
     }
 
     public Integer getAge() {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        return Period.between(LocalDate.parse(birthdate, formatter), LocalDate.now()).getYears(); //get interpreted birthdate
+        return Period.between(this.getInterpretedBirthdate(), LocalDate.now()).getYears();
     }
 
     public void setGender(String gender) {

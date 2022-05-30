@@ -16,10 +16,9 @@ public class MovieGenre {
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO, generator="native")
     @GenericGenerator(name = "native", strategy = "native")
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Long id;
 
-    @NotBlank
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private String genre;
 
     public MovieGenre() {}

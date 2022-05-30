@@ -44,6 +44,8 @@ public class CommentController {
     @PreAuthorize("hasAnyRole('ROLE_USER')")
     @ResponseStatus(code = HttpStatus.CREATED, reason = "CREATED")
     public void post(@Valid @RequestBody Comment comment) {
+        comment.isValid();
+
         var currentAppUser = identityService.getLoggedInAppUser();
         if (currentAppUser.isEmpty()) {
             throw new BusinessException("Could not find current app user", "Invalid permission", HttpStatus.FORBIDDEN);
@@ -52,12 +54,12 @@ public class CommentController {
         commentRepository.save(comment);
     }
 
-
-
     @PutMapping("/{id}")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
     @ResponseStatus(code = HttpStatus.NO_CONTENT, reason = "UPDATED")
     public void update(@PathVariable("id") Long id, @Valid @RequestBody Comment comment) {
+        comment.isValid();
+
         var foundComment = commentRepository.findById(id);
         if (foundComment.isEmpty()) {
             throw new BusinessException("Comment not found", "Invalid data", HttpStatus.NOT_FOUND);

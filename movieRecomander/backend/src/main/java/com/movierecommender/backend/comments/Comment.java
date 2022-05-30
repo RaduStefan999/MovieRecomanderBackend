@@ -3,17 +3,21 @@ package com.movierecommender.backend.comments;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.movierecommender.backend.advice.BusinessException;
 import com.movierecommender.backend.movies.movie.Movie;
 import com.movierecommender.backend.users.user.AppUser;
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.Objects;
 
 @Entity
@@ -41,7 +45,7 @@ public class Comment {
     @ManyToOne
     @JoinColumn(name = "movieId")
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    @NotBlank(message = "Movie ID is mandatory!")
+    @NotNull(message = "Movie ID is mandatory!")
     Movie movie;
 
     public Comment() {
@@ -105,6 +109,15 @@ public class Comment {
 
     public void setMovie(Movie movie) {
         this.movie = movie;
+    }
+
+    public void isValid() {
+        try {
+            DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            LocalDate.parse(this.commentDate, dateFormatter);
+        } catch (DateTimeParseException e) {
+            throw new BusinessException("Invalid date or invalid format.", "Json Format", HttpStatus.BAD_REQUEST);
+        }
     }
 
     @Override

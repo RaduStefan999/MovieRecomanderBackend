@@ -51,12 +51,17 @@ public class MovieController {
     @PostMapping
     @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     @ResponseStatus(code = HttpStatus.CREATED, reason = "CREATED")
-    public void addMovie(@Valid @RequestBody Movie movie){ movieRepository.save(movie); }
+    public void addMovie(@Valid @RequestBody Movie movie){
+        movie.isValid();
+        movieRepository.save(movie);
+    }
 
     @PutMapping("/{id}")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     @ResponseStatus(code = HttpStatus.NO_CONTENT, reason = "UPDATED")
     public void updateMovie(@PathVariable("id") Long id, @Valid @RequestBody Movie movie){
+        movie.isValid();
+
         var foundMovie = movieRepository.findById(id);
         if(foundMovie.isEmpty()){
             throw new BusinessException("Movie not found", "Invalid data", HttpStatus.NOT_FOUND);

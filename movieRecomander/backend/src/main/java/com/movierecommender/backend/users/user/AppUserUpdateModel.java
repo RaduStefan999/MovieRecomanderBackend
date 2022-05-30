@@ -1,6 +1,5 @@
 package com.movierecommender.backend.users.user;
 
-import java.time.LocalDate;
 import java.util.Objects;
 
 public class AppUserUpdateModel {
