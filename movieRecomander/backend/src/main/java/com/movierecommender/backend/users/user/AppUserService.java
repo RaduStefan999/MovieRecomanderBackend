@@ -1,6 +1,7 @@
 package com.movierecommender.backend.users.user;
 
 import com.movierecommender.backend.advice.BusinessException;
+import com.movierecommender.backend.users.PasswordStrengthException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -34,7 +35,13 @@ public class AppUserService {
             throw new BusinessException("email taken", "Register error", HttpStatus.CONFLICT);
         }
 
-        appUser.setPassword(passwordEncoder.encode(appUser.getPassword()));
+        try {
+            appUser.validateAndEncryptPassword(this.passwordEncoder);
+        }
+        catch (PasswordStrengthException passwordStrengthException) {
+            throw new BusinessException("Password does not meet requirements",
+                    "Validation error", HttpStatus.BAD_REQUEST);
+        }
 
         appUserRepository.save(appUser);
     }

@@ -2,11 +2,13 @@ package com.movierecommender.backend.users;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hibernate.annotations.GenericGenerator;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import java.util.Objects;
+import java.util.regex.*;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
@@ -26,8 +28,6 @@ public abstract class User {
     @Pattern(regexp ="^(?=.{2,25}$)(\\w{2,}(\\s?\\w{2,})?)$")
     private String name;
 
-    //@Pattern(regexp ="^(?=.*[A-Za-z])(?=.*\\d)(?=.*[@$!%*#?&])[A-Za-z\\d@$!%*#?&_]{10,50}$")
-    @Pattern(regexp = "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{10,50}$")
     @NotBlank(message="Password is mandatory")
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password; //password that will be stored as hash
@@ -89,6 +89,17 @@ public abstract class User {
     public String getRole() { return role; }
 
     public void setRole(String role) { this.role = role; }
+
+    public void validateAndEncryptPassword(PasswordEncoder passwordEncoder) {
+
+        if (!java.util.regex.Pattern.matches("^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[_!@#&()–[{}]:;',?/*~$^+=<>]).{10,50}$",
+                this.getPassword()))
+        {
+            throw new PasswordStrengthException("Password does not match requirements");
+        }
+
+        this.setPassword(passwordEncoder.encode(this.getPassword()));
+    }
 
     @Override
     public boolean equals(Object o) {
