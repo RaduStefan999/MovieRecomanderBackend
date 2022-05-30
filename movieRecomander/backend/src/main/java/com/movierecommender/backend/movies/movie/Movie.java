@@ -1,6 +1,7 @@
 package com.movierecommender.backend.movies.movie;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.movierecommender.backend.advice.BusinessException;
 import com.movierecommender.backend.comments.Comment;
@@ -148,6 +149,7 @@ public class Movie {
         return releaseDate;
     }
 
+    @JsonIgnore
     public LocalDate getInterpretedReleaseDate() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         return LocalDate.parse(releaseDate, formatter);

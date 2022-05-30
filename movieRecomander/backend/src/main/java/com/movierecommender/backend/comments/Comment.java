@@ -84,6 +84,7 @@ public class Comment {
         return commentDate;
     }
 
+    @JsonIgnore
     public LocalDate getInterpretedCommentDate() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         return LocalDate.parse(commentDate, formatter);

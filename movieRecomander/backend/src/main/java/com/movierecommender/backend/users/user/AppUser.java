@@ -1,5 +1,6 @@
 package com.movierecommender.backend.users.user;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.movierecommender.backend.advice.BusinessException;
 import com.movierecommender.backend.comments.Comment;
@@ -104,6 +105,7 @@ public class AppUser extends User {
         return birthdate;
     }
 
+    @JsonIgnore
     public LocalDate getInterpretedBirthdate() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         return LocalDate.parse(birthdate, formatter);
