@@ -27,7 +27,7 @@ public abstract class User {
     private String name;
 
     //@Pattern(regexp ="^(?=.*[A-Za-z])(?=.*\\d)(?=.*[@$!%*#?&])[A-Za-z\\d@$!%*#?&_]{10,50}$")
-    @Pattern(regexp = "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$")
+    @Pattern(regexp = "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{10,50}$")
     @NotBlank(message="Password is mandatory")
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password; //password that will be stored as hash
