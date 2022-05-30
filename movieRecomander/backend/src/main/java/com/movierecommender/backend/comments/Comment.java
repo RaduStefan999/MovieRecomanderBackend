@@ -31,9 +31,7 @@ public class Comment {
     @Column(length = 2000)
     @Size(min = 3, max = 2000, message = "Max length is 2000.")
     private String text;
-
-    //@DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-    //@JsonFormat(pattern = "yyyy-MM-dd")
+    
     @Pattern(regexp = "^\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$", message = "Date must be like \" yyyy-MM-dd \".")
     private String commentDate;
 
