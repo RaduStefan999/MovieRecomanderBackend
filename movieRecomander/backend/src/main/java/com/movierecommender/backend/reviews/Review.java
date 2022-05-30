@@ -7,6 +7,9 @@ import com.movierecommender.backend.users.user.AppUser;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 import java.util.Objects;
 
 @Entity
@@ -15,6 +18,7 @@ public class Review {
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO, generator="native")
     @GenericGenerator(name = "native", strategy = "native")
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     Long id;
 
     @ManyToOne
@@ -25,8 +29,11 @@ public class Review {
     @ManyToOne
     @JoinColumn(name = "movieId")
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @NotNull(message = "Movie ID is mandatory!")
     Movie movie;
 
+    @Min(1)
+    @Max(5)
     private Integer reviewValue;
 
     public Review() {

@@ -1,13 +1,23 @@
 package com.movierecommender.backend.comments;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.movierecommender.backend.advice.BusinessException;
 import com.movierecommender.backend.movies.movie.Movie;
 import com.movierecommender.backend.users.user.AppUser;
 import org.hibernate.annotations.GenericGenerator;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.Objects;
 
 @Entity
@@ -17,8 +27,13 @@ public class Comment {
     @GeneratedValue(strategy= GenerationType.AUTO, generator="native")
     @GenericGenerator(name = "native", strategy = "native")
     private Long id;
+
+    @Column(length = 2000)
+    @Size(min = 3, max = 2000, message = "Max length is 2000.")
     private String text;
-    private LocalDate commentDate;
+    
+    @Pattern(regexp = "^\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$", message = "Date must be like \" yyyy-MM-dd \".")
+    private String commentDate;
 
     @ManyToOne
     @JoinColumn(name = "userId")
@@ -28,12 +43,13 @@ public class Comment {
     @ManyToOne
     @JoinColumn(name = "movieId")
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @NotNull(message = "Movie ID is mandatory!")
     Movie movie;
 
     public Comment() {
     }
 
-    public Comment(Long id, String text, LocalDate commentDate, AppUser appUser, Movie movie) {
+    public Comment(Long id, String text, String commentDate, AppUser appUser, Movie movie) {
         this.id = id;
         this.text = text;
         this.commentDate = commentDate;
@@ -64,11 +80,16 @@ public class Comment {
         this.text = text;
     }
 
-    public LocalDate getCommentDate() {
+    public String getCommentDate() {
         return commentDate;
     }
 
-    public void setCommentDate(LocalDate commentDate) {
+    public LocalDate getInterpretedCommentDate() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        return LocalDate.parse(commentDate, formatter);
+    }
+
+    public void setCommentDate(String commentDate) {
         this.commentDate = commentDate;
     }
 
@@ -86,6 +107,15 @@ public class Comment {
 
     public void setMovie(Movie movie) {
         this.movie = movie;
+    }
+
+    public void isValid() {
+        try {
+            DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            LocalDate.parse(this.commentDate, dateFormatter);
+        } catch (DateTimeParseException e) {
+            throw new BusinessException("Invalid date or invalid format.", "Json Format", HttpStatus.BAD_REQUEST);
+        }
     }
 
     @Override
