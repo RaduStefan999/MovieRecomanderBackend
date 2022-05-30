@@ -35,7 +35,7 @@ public class FileService {
 
             String originalFileName = file.getOriginalFilename() != null ? file.getOriginalFilename() : file.getName();
 
-            String fileId = "file_" + timestamp + "." + com.google.common.io.Files.getFileExtension(originalFileName);
+            String fileId = "file_" + timestamp + "_" + com.google.common.io.Files.getFileExtension(originalFileName);
 
             UploadedFile uploadedFile = new UploadedFile(filePathOnServer.toString(), fileId,
                     originalFileName, file.getContentType());
