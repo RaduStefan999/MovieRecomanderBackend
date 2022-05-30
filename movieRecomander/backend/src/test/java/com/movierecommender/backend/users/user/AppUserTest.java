@@ -35,7 +35,7 @@ class AppUserTest {
                                     ", password='" + "madalin" + '\'' +
                                 '}' +
                                     ", gender='" + "" + '\'' +
-                                    ", birthdate='" + "2022-05-30" + '\'' +
+                                    ", birthdate='" + LocalDate.now().toString() + '\'' +
                                     ", country='" + "" + '\'' +
                                     ", phoneNumber='" + "" + '\'' +
                                 '}', response);
