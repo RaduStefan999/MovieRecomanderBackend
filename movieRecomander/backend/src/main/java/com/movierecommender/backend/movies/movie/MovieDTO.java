@@ -1,10 +1,14 @@
 package com.movierecommender.backend.movies.movie;
 
+import com.movierecommender.backend.advice.BusinessException;
 import com.movierecommender.backend.comments.Comment;
 import com.movierecommender.backend.movies.moviegenre.MovieGenre;
 import com.movierecommender.backend.reviews.Review;
+import org.springframework.http.HttpStatus;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -18,7 +22,7 @@ public class MovieDTO
 	private Integer ageRestriction;
 
 	private List<MovieGenre> movieGenres;
-	private LocalDate releaseDate;
+	private String releaseDate;
 	private Integer duration;
 	private String trailerLink;
 	private String movieLink;
@@ -31,7 +35,7 @@ public class MovieDTO
 	{
 	}
 
-	public MovieDTO(String name, String summary, String description, Integer ageRestriction, List<MovieGenre> movieGenres, LocalDate releaseDate, Integer duration, String trailerLink, String movieLink, String thumbnailLink, Set<Review> ratings, Set<Comment> comments)
+	public MovieDTO(String name, String summary, String description, Integer ageRestriction, List<MovieGenre> movieGenres, String releaseDate, Integer duration, String trailerLink, String movieLink, String thumbnailLink, Set<Review> ratings, Set<Comment> comments)
 	{
 		this.name = name;
 		this.summary = summary;
@@ -107,12 +111,12 @@ public class MovieDTO
 		this.movieGenres = movieGenres;
 	}
 
-	public LocalDate getReleaseDate()
+	public String getReleaseDate()
 	{
 		return releaseDate;
 	}
 
-	public void setReleaseDate(LocalDate releaseDate)
+	public void setReleaseDate(String releaseDate)
 	{
 		this.releaseDate = releaseDate;
 	}
@@ -175,6 +179,15 @@ public class MovieDTO
 	public void setComments(Set<Comment> comments)
 	{
 		this.comments = comments;
+	}
+
+	public void isValid() {
+		try {
+			DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+			LocalDate.parse(this.releaseDate, dateFormatter);
+		} catch (DateTimeParseException e) {
+			throw new BusinessException("Invalid date or invalid format.", "Json Format", HttpStatus.BAD_REQUEST);
+		}
 	}
 
 	@Override

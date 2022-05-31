@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -33,10 +34,22 @@ public class CommentController {
         return ResponseEntity.ok(commentRepository.findAll());
     }
 
+    @GetMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ROLE_USER')")
+    public ResponseEntity<Comment> read(@PathVariable("id") Long id) {
+        var foundComment = commentRepository.findById(id);
+        if (foundComment.isEmpty()) {
+            throw new BusinessException("Comment not found", "Invalid data", HttpStatus.NOT_FOUND);
+        }
+        return ResponseEntity.ok(foundComment.get());
+    }
+
     @PostMapping
     @PreAuthorize("hasAnyRole('ROLE_USER')")
     @ResponseStatus(code = HttpStatus.CREATED, reason = "CREATED")
-    public void post(@RequestBody CommentDTO commentDTO) {
+    public void post(@Valid @RequestBody CommentDTO commentDTO) {
+        commentDTO.isValid();
+
         var currentAppUser = identityService.getLoggedInAppUser();
         if (currentAppUser.isEmpty()) {
             throw new BusinessException("Could not find current app user", INVALID_PERMISSION, HttpStatus.FORBIDDEN);
@@ -45,20 +58,12 @@ public class CommentController {
         commentRepository.save(new Comment(commentDTO));
     }
 
-    @GetMapping("/{id}")
-    @PreAuthorize("hasAnyRole('ROLE_USER')")
-    public ResponseEntity<Comment> read(@PathVariable("id") Long id) {
-        var foundComment = commentRepository.findById(id);
-        if (foundComment.isEmpty()) {
-            throw new BusinessException(COMMENT_NOT_FOUND, INVALID_DATA, HttpStatus.NOT_FOUND);
-        }
-        return ResponseEntity.ok(foundComment.get());
-    }
-
     @PutMapping("/{id}")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
     @ResponseStatus(code = HttpStatus.NO_CONTENT, reason = "UPDATED")
-    public void update(@PathVariable("id") Long id, @RequestBody CommentDTO commentDTO) {
+    public void update(@PathVariable("id") Long id, @Valid @RequestBody CommentDTO commentDTO) {
+        commentDTO.isValid();
+
         var foundComment = commentRepository.findById(id);
         if (foundComment.isEmpty()) {
             throw new BusinessException(COMMENT_NOT_FOUND, INVALID_DATA, HttpStatus.NOT_FOUND);

@@ -41,7 +41,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     };
     private static final String[] APP_AUTH_WHITELIST = {
             "/api/v1/login",
-            "/api/v1/users/register"
+            "/api/v1/users/register",
+            "/api/v1/files/**"
     };
 
     private final PasswordEncoder passwordEncoder;

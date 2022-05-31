@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -32,10 +33,20 @@ public class ReviewController {
         return ResponseEntity.ok(reviewRepository.findAll());
     }
 
+    @GetMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ROLE_USER')")
+    public ResponseEntity<Review> read(@PathVariable("id") Long id) {
+        var foundReview = reviewRepository.findById(id);
+        if (foundReview.isEmpty()) {
+            throw new BusinessException("Review not found", "Invalid data", HttpStatus.NOT_FOUND);
+        }
+        return ResponseEntity.ok(foundReview.get());
+    }
+
     @PostMapping
     @PreAuthorize("hasAnyRole('ROLE_USER')")
     @ResponseStatus(code = HttpStatus.CREATED, reason = "CREATED")
-    public void post(@RequestBody ReviewDTO reviewDTO) {
+    public void post(@Valid @RequestBody ReviewDTO reviewDTO) {
         var currentAppUser = this.identityService.getLoggedInAppUser();
         if (currentAppUser.isEmpty()) {
             throw new BusinessException("Could not find current app user", INVALID_PERMISSION, HttpStatus.FORBIDDEN);
@@ -44,20 +55,10 @@ public class ReviewController {
         reviewRepository.save(new Review(reviewDTO));
     }
 
-    @GetMapping("/{id}")
-    @PreAuthorize("hasAnyRole('ROLE_USER')")
-    public ResponseEntity<Review> read(@PathVariable("id") Long id) {
-        var foundReview = reviewRepository.findById(id);
-        if (foundReview.isEmpty()) {
-            throw new BusinessException(REVIEW_NOT_FOUND, INVALID_DATA, HttpStatus.NOT_FOUND);
-        }
-        return ResponseEntity.ok(foundReview.get());
-    }
-
     @PutMapping("/{id}")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
     @ResponseStatus(code = HttpStatus.NO_CONTENT, reason = "UPDATED")
-    public void update(@PathVariable("id") Long id, @RequestBody ReviewDTO reviewDTO) {
+    public void update(@PathVariable("id") Long id,@Valid @RequestBody ReviewDTO reviewDTO) {
         var foundReview = reviewRepository.findById(id);
         if (foundReview.isEmpty()) {
             throw new BusinessException(REVIEW_NOT_FOUND, INVALID_DATA, HttpStatus.NOT_FOUND);

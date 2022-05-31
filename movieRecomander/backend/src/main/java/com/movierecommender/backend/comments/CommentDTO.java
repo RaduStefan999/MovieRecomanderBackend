@@ -2,17 +2,21 @@ package com.movierecommender.backend.comments;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.movierecommender.backend.advice.BusinessException;
 import com.movierecommender.backend.movies.movie.Movie;
 import com.movierecommender.backend.users.user.AppUser;
+import org.springframework.http.HttpStatus;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.Objects;
 
 public class CommentDTO
 {
 	private Long id;
 	private String text;
-	private LocalDate commentDate;
+	private String commentDate;
 
 	@JsonIgnore
 	AppUser appUser;
@@ -40,12 +44,12 @@ public class CommentDTO
 		this.text = text;
 	}
 
-	public LocalDate getCommentDate()
+	public String getCommentDate()
 	{
 		return commentDate;
 	}
 
-	public void setCommentDate(LocalDate commentDate)
+	public void setCommentDate(String commentDate)
 	{
 		this.commentDate = commentDate;
 	}
@@ -68,6 +72,15 @@ public class CommentDTO
 	public void setMovie(Movie movie)
 	{
 		this.movie = movie;
+	}
+
+	public void isValid() {
+		try {
+			DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+			LocalDate.parse(this.commentDate, dateFormatter);
+		} catch (DateTimeParseException e) {
+			throw new BusinessException("Invalid date or invalid format.", "Json Format", HttpStatus.BAD_REQUEST);
+		}
 	}
 
 	@Override

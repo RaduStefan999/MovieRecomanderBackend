@@ -1,5 +1,6 @@
 package com.movierecommender.backend.movies.moviegenre;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.Entity;
@@ -17,6 +18,8 @@ public class MovieGenre implements Serializable
     @GeneratedValue(strategy= GenerationType.AUTO, generator="native")
     @GenericGenerator(name = "native", strategy = "native")
     private Long id;
+
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private String genre;
 
     public MovieGenre() {}

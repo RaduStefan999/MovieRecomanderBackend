@@ -1,16 +1,20 @@
 package com.movierecommender.backend.users.user;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.movierecommender.backend.advice.BusinessException;
 import com.movierecommender.backend.security.config.UserRoles;
 import com.movierecommender.backend.users.UserDTO;
+import org.springframework.http.HttpStatus;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.Objects;
 
 public class AppUserDTO extends UserDTO
 {
 	private String gender;
-	private LocalDate birthdate;
+	private String birthdate;
 	private String country;
 	private String phoneNumber;
 	private String profileImageLink;
@@ -22,7 +26,7 @@ public class AppUserDTO extends UserDTO
 		super(String.valueOf(UserRoles.USER));
 	}
 
-	public AppUserDTO(String gender, LocalDate birthdate, String country, String phoneNumber, String profileImageLink) {
+	public AppUserDTO(String gender, String birthdate, String country, String phoneNumber, String profileImageLink) {
 		super(String.valueOf(UserRoles.USER));
 		this.gender = gender;
 		this.birthdate = birthdate;
@@ -31,7 +35,7 @@ public class AppUserDTO extends UserDTO
 		this.profileImageLink = profileImageLink;
 	}
 
-	public AppUserDTO(String email, String name, String password, String gender, LocalDate birthdate, String country, String phoneNumber, String profileImageLink) {
+	public AppUserDTO(String email, String name, String password, String gender, String birthdate, String country, String phoneNumber, String profileImageLink) {
 		super(email, name, password, String.valueOf(UserRoles.USER));
 		this.gender = gender;
 		this.birthdate = birthdate;
@@ -40,7 +44,7 @@ public class AppUserDTO extends UserDTO
 		this.profileImageLink = profileImageLink;
 	}
 
-	public AppUserDTO(Long id, String email, String name, String password, String gender, LocalDate birthdate, String country, String phoneNumber, String profileImageLink) {
+	public AppUserDTO(Long id, String email, String name, String password, String gender, String birthdate, String country, String phoneNumber, String profileImageLink) {
 		super(id, email, name, password, String.valueOf(UserRoles.USER));
 		this.gender = gender;
 		this.birthdate = birthdate;
@@ -59,12 +63,12 @@ public class AppUserDTO extends UserDTO
 		this.gender = gender;
 	}
 
-	public LocalDate getBirthdate()
+	public String getBirthdate()
 	{
 		return birthdate;
 	}
 
-	public void setBirthdate(LocalDate birthdate)
+	public void setBirthdate(String birthdate)
 	{
 		this.birthdate = birthdate;
 	}
@@ -107,6 +111,15 @@ public class AppUserDTO extends UserDTO
 	public void setAge(Integer age)
 	{
 		this.age = age;
+	}
+
+	public void isValid(){
+		try {
+			DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+			LocalDate.parse(this.birthdate, dateFormatter);
+		} catch (DateTimeParseException e) {
+			throw new BusinessException("Invalid date or invalid format.", "Json Format", HttpStatus.BAD_REQUEST);
+		}
 	}
 
 	@Override
