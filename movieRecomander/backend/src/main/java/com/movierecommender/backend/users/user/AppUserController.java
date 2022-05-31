@@ -1,17 +1,20 @@
 package com.movierecommender.backend.users.user;
 
 import com.movierecommender.backend.advice.BusinessException;
-import com.movierecommender.backend.comments.Comment;
 import com.movierecommender.backend.identity.IdentityService;
 import com.movierecommender.backend.security.config.UserRoles;
-import io.swagger.annotations.Api;
+import com.movierecommender.backend.security.jwt.JwtConfig;
+import com.movierecommender.backend.security.utils.TokenSigner;
+import com.movierecommender.backend.users.User;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.crypto.SecretKey;
 import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
@@ -23,10 +26,17 @@ public class AppUserController {
     private final AppUserService appUserService;
     private final IdentityService identityService;
 
+    private final JwtConfig jwtConfig;
+    private final SecretKey secretKey;
+
     @Autowired
-    public AppUserController(AppUserService appUserService, IdentityService identityService) {
+    public AppUserController(AppUserService appUserService, IdentityService identityService,
+                             JwtConfig jwtConfig, SecretKey secretKey)
+    {
         this.appUserService = appUserService;
         this.identityService = identityService;
+        this.jwtConfig = jwtConfig;
+        this.secretKey = secretKey;
     }
 
     @ApiOperation(value = "This method is used to get the users.")      // description added
@@ -55,13 +65,25 @@ public class AppUserController {
 
     @PutMapping("/{id}")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
-    @ResponseStatus(code = HttpStatus.NO_CONTENT, reason = "UPDATED")
-    public void update(@RequestBody AppUserUpdateModel appUserUpdateModel, @PathVariable Long id) {
+    public ResponseEntity<?> update(@RequestBody AppUserUpdateModel appUserUpdateModel, @PathVariable Long id) {
         if (!this.userCanModify(id)) {
             throw new BusinessException("User can't modify this", "Invalid permission", HttpStatus.FORBIDDEN);
         }
 
-        appUserService.updateService(id, appUserUpdateModel);
+        boolean loggedInIsUser = loggedInIsUser();
+
+        var updatedUser = appUserService.updateService(id, appUserUpdateModel);
+
+        if (updatedUser.isEmpty()) {
+            throw new BusinessException("Failed to update user", "Internal update error",
+                    HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        return loggedInIsUser ?
+                ResponseEntity.noContent().headers(getTokenForChangedUser(updatedUser.get())).build()
+                    :
+                ResponseEntity.noContent().build();
+
     }
 
     @DeleteMapping(path = "{appUserId}")
@@ -80,5 +102,21 @@ public class AppUserController {
                                 currentUser.get().getId().equals(id)
                 )
         );
+    }
+
+    private HttpHeaders getTokenForChangedUser(User changedUser) {
+        TokenSigner tokenSigner = new TokenSigner(jwtConfig, secretKey);
+
+        HttpHeaders responseHeaders = new HttpHeaders();
+        responseHeaders.set(tokenSigner.getAuthorizationHeader(),
+                tokenSigner.getToken(changedUser));
+
+        return responseHeaders;
+    }
+
+    private boolean loggedInIsUser() {
+        var currentUser = this.identityService.getLoggedInUser();
+        return currentUser.isPresent() &&
+                UserRoles.valueOf(currentUser.get().getRole()) == UserRoles.USER;
     }
 }

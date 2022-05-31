@@ -1,7 +1,7 @@
 package com.movierecommender.backend.security.jwt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.jsonwebtoken.Jwts;
+import com.movierecommender.backend.security.utils.TokenSigner;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -14,8 +14,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.time.LocalDate;
-import java.util.Date;
 
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
@@ -55,14 +53,10 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                                             HttpServletResponse response,
                                             FilterChain chain,
                                             Authentication authResult) throws IOException, ServletException {
-        String token = Jwts.builder()
-                .setSubject(authResult.getName())
-                .claim("authorities", authResult.getAuthorities())
-                .setIssuedAt(new Date())
-                .setExpiration(java.sql.Date.valueOf(LocalDate.now().plusDays(jwtConfig.getTokenExpirationAfterDays())))
-                .signWith(secretKey)
-                .compact();
 
-        response.addHeader(jwtConfig.getAuthorizationHeader(), jwtConfig.getTokenPrefix() + token);
+        TokenSigner tokenSigner = new TokenSigner(jwtConfig, secretKey);
+
+        response.addHeader(tokenSigner.getAuthorizationHeader(),
+                tokenSigner.getToken(authResult.getName(), authResult.getAuthorities()));
     }
 }
