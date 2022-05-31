@@ -5,7 +5,6 @@ import com.movierecommender.backend.security.jwt.JwtConfig;
 import com.movierecommender.backend.users.User;
 import io.jsonwebtoken.Jwts;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
 import java.time.LocalDate;

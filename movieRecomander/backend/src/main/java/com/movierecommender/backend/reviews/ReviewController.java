@@ -21,6 +21,8 @@ public class ReviewController {
     private static final String INVALID_DATA = "Invalid data";
     private static final String REVIEW_NOT_FOUND = "Review not found";
 
+    private static final String USER_CANT_MODIFY = "User can't modify this";
+
     @Autowired
     public ReviewController(ReviewRepository reviewRepository, IdentityService identityService) {
         this.reviewRepository = reviewRepository;
@@ -38,7 +40,7 @@ public class ReviewController {
     public ResponseEntity<Review> read(@PathVariable("id") Long id) {
         var foundReview = reviewRepository.findById(id);
         if (foundReview.isEmpty()) {
-            throw new BusinessException("Review not found", "Invalid data", HttpStatus.NOT_FOUND);
+            throw new BusinessException(REVIEW_NOT_FOUND, INVALID_DATA, HttpStatus.NOT_FOUND);
         }
         return ResponseEntity.ok(foundReview.get());
     }
@@ -65,7 +67,7 @@ public class ReviewController {
         }
 
         if (this.userCanModify(foundReview.get())) {
-            throw new BusinessException("User can't modify this", INVALID_PERMISSION, HttpStatus.FORBIDDEN);
+            throw new BusinessException(USER_CANT_MODIFY, INVALID_PERMISSION, HttpStatus.FORBIDDEN);
         }
 
         foundReview.get().update(reviewDTO);
@@ -81,7 +83,7 @@ public class ReviewController {
         }
 
         if (this.userCanModify(foundReview.get())) {
-            throw new BusinessException("User can't modify this", INVALID_PERMISSION, HttpStatus.FORBIDDEN);
+            throw new BusinessException(USER_CANT_MODIFY, INVALID_PERMISSION, HttpStatus.FORBIDDEN);
         }
 
         reviewRepository.delete(foundReview.get());

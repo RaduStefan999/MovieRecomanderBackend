@@ -25,34 +25,6 @@ public class AppUserDTO extends UserDTO
 	public AppUserDTO() {
 		super(String.valueOf(UserRoles.USER));
 	}
-
-	public AppUserDTO(String gender, String birthdate, String country, String phoneNumber, String profileImageLink) {
-		super(String.valueOf(UserRoles.USER));
-		this.gender = gender;
-		this.birthdate = birthdate;
-		this.country = country;
-		this.phoneNumber = phoneNumber;
-		this.profileImageLink = profileImageLink;
-	}
-
-	public AppUserDTO(String email, String name, String password, String gender, String birthdate, String country, String phoneNumber, String profileImageLink) {
-		super(email, name, password, String.valueOf(UserRoles.USER));
-		this.gender = gender;
-		this.birthdate = birthdate;
-		this.country = country;
-		this.phoneNumber = phoneNumber;
-		this.profileImageLink = profileImageLink;
-	}
-
-	public AppUserDTO(Long id, String email, String name, String password, String gender, String birthdate, String country, String phoneNumber, String profileImageLink) {
-		super(id, email, name, password, String.valueOf(UserRoles.USER));
-		this.gender = gender;
-		this.birthdate = birthdate;
-		this.country = country;
-		this.phoneNumber = phoneNumber;
-		this.profileImageLink = profileImageLink;
-	}
-
 	public String getGender()
 	{
 		return gender;

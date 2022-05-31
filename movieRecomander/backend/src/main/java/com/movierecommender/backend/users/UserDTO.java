@@ -11,7 +11,7 @@ public abstract class UserDTO
 	protected Long id;
 
 	@NotBlank(message="Email is mandatory")
-	@Pattern(regexp="^[A-Za-z0-9+_.-]+@(.+)$", message = "cd")
+	@Pattern(regexp="^[\\p{javaLetterOrDigit}+_.-]+@(.+)$", message = "cd")
 	protected String email;
 
 	@NotBlank(message="Name is mandatory")
@@ -26,34 +26,10 @@ public abstract class UserDTO
 	@JsonProperty(access = JsonProperty.Access.READ_ONLY)
 	protected String role;
 
-
-	protected UserDTO()
-	{
-	}
-
 	protected UserDTO(String role)
 	{
 		this.role = role;
 	}
-
-	protected UserDTO(String email, String name, String password, String role)
-	{
-		this.email = email;
-		this.name = name;
-		this.password = password;
-		this.role = role;
-	}
-
-	protected UserDTO(Long id, String email, String name, String password, String role)
-	{
-		this.id = id;
-		this.email = email;
-		this.name = name;
-		this.password = password;
-		this.role = role;
-	}
-
-
 
 	public Long getId() {
 		return id;
@@ -88,8 +64,6 @@ public abstract class UserDTO
 	}
 
 	public String getRole() { return role; }
-
-	public void setRole(String role) { this.role = role; }
 
 	@Override
 	public boolean equals(Object o)

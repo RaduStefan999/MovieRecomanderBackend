@@ -17,6 +17,8 @@ import java.util.Set;
 @RequestMapping("/api/v1/movies")
 public class MovieController {
     private final MovieRepository movieRepository;
+    private static final String INVALID_DATA = "Invalid data";
+    private static final String MOVIE_NOT_FOUND = "Movie not found";
 
     @Autowired
     public MovieController(MovieRepository movieRepository){
@@ -33,7 +35,7 @@ public class MovieController {
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
     public ResponseEntity<Movie> getByID(@PathVariable("id") Long id){
         if (movieRepository.findById(id).isEmpty()) {
-            throw new BusinessException("Movie not found", "Invalid data", HttpStatus.NOT_FOUND);
+            throw new BusinessException(MOVIE_NOT_FOUND, INVALID_DATA, HttpStatus.NOT_FOUND);
         }
         Optional<Movie> movie = movieRepository.findById(id);
         return ResponseEntity.ok(movie.orElse(null));
@@ -44,7 +46,7 @@ public class MovieController {
     public ResponseEntity<Set<Comment>> getMovieComments(@PathVariable Long id){
         var findMovie = movieRepository.findById(id);
         if (findMovie.isEmpty()) {
-            throw new BusinessException("Movie to get comments by not found", "Invalid data", HttpStatus.NOT_FOUND);
+            throw new BusinessException("Movie to get comments by not found", INVALID_DATA, HttpStatus.NOT_FOUND);
         }
         return ResponseEntity.ok(findMovie.get().getComments());
     }
@@ -53,7 +55,7 @@ public class MovieController {
     @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     @ResponseStatus(code = HttpStatus.CREATED, reason = "CREATED")
     public void addMovie(@Valid @RequestBody MovieDTO movieDTO){
-        movieDTO.isValid();
+        movieDTO.validate();
         movieRepository.save(new Movie(movieDTO)); 
     }
 
@@ -61,11 +63,11 @@ public class MovieController {
     @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     @ResponseStatus(code = HttpStatus.NO_CONTENT, reason = "UPDATED")
     public void updateMovie(@PathVariable("id") Long id, @Valid @RequestBody MovieDTO movieDTO){
-        movieDTO.isValid();
+        movieDTO.validate();
 
         var foundMovie = movieRepository.findById(id);
         if(foundMovie.isEmpty()){
-            throw new BusinessException("Movie not found", "Invalid data", HttpStatus.NOT_FOUND);
+            throw new BusinessException(MOVIE_NOT_FOUND, INVALID_DATA, HttpStatus.NOT_FOUND);
         }
         foundMovie.get().update(movieDTO);
     }

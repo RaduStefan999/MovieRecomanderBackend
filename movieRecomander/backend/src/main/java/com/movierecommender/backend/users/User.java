@@ -9,7 +9,6 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import java.io.Serializable;
 import java.util.Objects;
-import java.util.regex.*;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
@@ -22,12 +21,12 @@ public abstract class User implements Serializable
     protected Long id;
 
     @NotBlank(message="Email is mandatory")
-    @Pattern(regexp="^(?=.{5,30})[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,5}$", message = "Wrong email")
+    @Pattern(regexp="^(?=.{5,30})[\\w-.]+@([\\w-]+\\.){1,7}[\\w-]{2,5}$", message = "Wrong email")
     //@Pattern(regexp = "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$")
     protected String email;
 
     @NotBlank(message="Name is mandatory")
-    @Pattern(regexp ="^(?=.{2,25}$)(\\w{2,}(\\s?\\w{2,})?)$")
+    @Pattern(regexp ="(\\w{2,25}( ?\\w{1,25})?)$")
     protected String name;
 
     @NotBlank(message="Password is mandatory")
@@ -94,7 +93,7 @@ public abstract class User implements Serializable
 
     public void validateAndEncryptPassword(PasswordEncoder passwordEncoder) {
 
-        if (!java.util.regex.Pattern.matches("^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[_!@#&()–[{}]:;',?/*~$^+=<>]).{10,50}$",
+        if (!java.util.regex.Pattern.matches("^(?=.*[/d])(?=.*[a-z])(?=.*[A-Z])(?=.*[_!@#&()–:;',?/*~$^+=<>]).{10,50}$",
                 this.getPassword()))
         {
             throw new PasswordStrengthException("Password does not match requirements");

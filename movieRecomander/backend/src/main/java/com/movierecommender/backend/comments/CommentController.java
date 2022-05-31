@@ -39,7 +39,7 @@ public class CommentController {
     public ResponseEntity<Comment> read(@PathVariable("id") Long id) {
         var foundComment = commentRepository.findById(id);
         if (foundComment.isEmpty()) {
-            throw new BusinessException("Comment not found", "Invalid data", HttpStatus.NOT_FOUND);
+            throw new BusinessException(COMMENT_NOT_FOUND, INVALID_DATA, HttpStatus.NOT_FOUND);
         }
         return ResponseEntity.ok(foundComment.get());
     }
@@ -69,7 +69,7 @@ public class CommentController {
             throw new BusinessException(COMMENT_NOT_FOUND, INVALID_DATA, HttpStatus.NOT_FOUND);
         }
 
-        if (!this.userCanModify(foundComment.get())) {
+        if (this.userCantModify(foundComment.get())) {
             throw new BusinessException("User can't modify this", INVALID_PERMISSION, HttpStatus.FORBIDDEN);
         }
 
@@ -85,21 +85,18 @@ public class CommentController {
             throw new BusinessException(COMMENT_NOT_FOUND, INVALID_DATA, HttpStatus.NOT_FOUND);
         }
 
-        if (!this.userCanModify(foundComment.get())) {
+        if (this.userCantModify(foundComment.get())) {
             throw new BusinessException("User can't modify this", INVALID_PERMISSION, HttpStatus.FORBIDDEN);
         }
 
         commentRepository.delete(foundComment.get());
     }
 
-    private boolean userCanModify(Comment comment) {
+    private boolean userCantModify(Comment comment) {
         var currentUser = this.identityService.getLoggedInUser();
 
-        return (currentUser.isPresent() &&
-            (
-                UserRoles.valueOf(currentUser.get().getRole()) == UserRoles.ADMIN ||
-                !currentUser.get().equals(comment.getAppUser())
-            )
-        );
+        return (currentUser.isEmpty() ||
+                (UserRoles.valueOf(currentUser.get().getRole()) != UserRoles.ADMIN &&
+                        currentUser.get().equals(comment.getAppUser())));
     }
 }

@@ -1,24 +1,18 @@
 package com.movierecommender.backend.comments;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.movierecommender.backend.advice.BusinessException;
 import com.movierecommender.backend.movies.movie.Movie;
 import com.movierecommender.backend.users.user.AppUser;
 import org.hibernate.annotations.GenericGenerator;
-import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.http.HttpStatus;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
 import java.util.Objects;
 
 @Entity
@@ -34,7 +28,7 @@ public class Comment implements Serializable
     @Size(min = 3, max = 2000, message = "Max length is 2000.")
     private String text;
     
-    @Pattern(regexp = "^\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$", message = "Date must be like \" yyyy-MM-dd \".")
+    @Pattern(regexp = "^\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][/d]|3[01])$", message = "Date must be like \" yyyy-MM-dd \".")
     private String commentDate;
 
     @ManyToOne
@@ -78,10 +72,6 @@ public class Comment implements Serializable
         return text;
     }
 
-    public void setText(String text) {
-        this.text = text;
-    }
-
     public String getCommentDate() {
         return commentDate;
     }
@@ -92,16 +82,8 @@ public class Comment implements Serializable
         return LocalDate.parse(commentDate, formatter);
     }
 
-    public void setCommentDate(String commentDate) {
-        this.commentDate = commentDate;
-    }
-
     public AppUser getAppUser() {
         return appUser;
-    }
-
-    public void setAppUser(AppUser appUser) {
-        this.appUser = appUser;
     }
 
     public Movie getMovie() {

@@ -54,19 +54,6 @@ public class Review implements Serializable
         this.reviewValue = reviewValue;
     }
 
-    public Review(Long id, AppUser appUser, Movie movie, Integer reviewValue) {
-        this.id = id;
-        this.appUser = appUser;
-        this.movie = movie;
-        this.reviewValue = reviewValue;
-    }
-
-    public void update(Review review) {
-        this.appUser = review.appUser;
-        this.movie = review.movie;
-        this.reviewValue = review.reviewValue;
-    }
-
     public void update(ReviewDTO reviewDTO) {
         this.appUser = reviewDTO.getAppUser();
         this.movie = reviewDTO.getMovie();
@@ -85,10 +72,6 @@ public class Review implements Serializable
         return appUser;
     }
 
-    public void setAppUser(AppUser appUser) {
-        this.appUser = appUser;
-    }
-
     public Movie getMovie() {
         return movie;
     }
@@ -99,10 +82,6 @@ public class Review implements Serializable
 
     public Integer getReviewValue() {
         return reviewValue;
-    }
-
-    public void setReviewValue(Integer reviewValue) {
-        this.reviewValue = reviewValue;
     }
 
     @Override

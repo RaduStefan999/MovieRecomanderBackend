@@ -13,7 +13,6 @@ import java.util.Objects;
 @Entity
 public class MovieGenre implements Serializable
 {
-
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO, generator="native")
     @GenericGenerator(name = "native", strategy = "native")
@@ -37,16 +36,8 @@ public class MovieGenre implements Serializable
         return id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public String getGenre() {
         return genre;
-    }
-
-    public void setGenre(String genre) {
-        this.genre = genre;
     }
 
     @Override

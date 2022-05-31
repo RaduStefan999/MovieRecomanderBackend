@@ -65,7 +65,7 @@ public class AppUserController {
 
     @PutMapping("/{id}")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
-    public ResponseEntity<?> update(@RequestBody AppUserUpdateModel appUserUpdateModel, @PathVariable Long id) {
+    public ResponseEntity<Void> update(@RequestBody AppUserUpdateModel appUserUpdateModel, @PathVariable Long id) {
         if (!this.userCanModify(id)) {
             throw new BusinessException("User can't modify this", "Invalid permission", HttpStatus.FORBIDDEN);
         }

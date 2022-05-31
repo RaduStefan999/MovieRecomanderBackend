@@ -33,7 +33,7 @@ public class FileService {
             Path filePathOnServer = Paths.get(fileConfig.getFileStorePath() + "uploaded_" + timestamp);
             Files.write(filePathOnServer, data);
 
-            String originalFileName = file.getOriginalFilename() != null ? file.getOriginalFilename() : file.getName();
+            String originalFileName = Optional.ofNullable(file.getOriginalFilename()).orElse(file.getName());
 
             String fileId = "file_" + timestamp + "_" + com.google.common.io.Files.getFileExtension(originalFileName);
 

@@ -31,26 +31,6 @@ public class MovieDTO
 	Set<Review> ratings;
 	Set<Comment> comments;
 
-	public MovieDTO()
-	{
-	}
-
-	public MovieDTO(String name, String summary, String description, Integer ageRestriction, List<MovieGenre> movieGenres, String releaseDate, Integer duration, String trailerLink, String movieLink, String thumbnailLink, Set<Review> ratings, Set<Comment> comments)
-	{
-		this.name = name;
-		this.summary = summary;
-		this.description = description;
-		this.ageRestriction = ageRestriction;
-		this.movieGenres = movieGenres;
-		this.releaseDate = releaseDate;
-		this.duration = duration;
-		this.trailerLink = trailerLink;
-		this.movieLink = movieLink;
-		this.thumbnailLink = thumbnailLink;
-		this.ratings = ratings;
-		this.comments = comments;
-	}
-
 	public Long getId()
 	{
 		return id;
@@ -181,7 +161,7 @@ public class MovieDTO
 		this.comments = comments;
 	}
 
-	public void isValid() {
+	public void validate() {
 		try {
 			DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 			LocalDate.parse(this.releaseDate, dateFormatter);

@@ -10,7 +10,6 @@ import com.movierecommender.backend.security.config.UserRoles;
 import org.springframework.http.HttpStatus;
 
 import javax.persistence.*;
-import javax.transaction.Transactional;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
@@ -27,19 +26,19 @@ import java.util.Set;
 public class AppUser extends User implements Serializable {
 
     @NotBlank(message="Gender is mandatory")
-    @Pattern(regexp="^(M|F)$", message = "Gender must be M or F.")
+    @Pattern(regexp="^[M|F]$", message = "Gender must be M or F.")
     private String gender;
 
-    @Pattern(regexp = "^\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$",
+    @Pattern(regexp = "^\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][/d]|3[01])$",
             message = "Birthdate must be the type yyyy-MM-dd")
     private String birthdate;
 
     @NotBlank(message="Country is mandatory")
-    @Pattern(regexp ="^(?=.{2,25}$)(\\w{2,}(\\s?\\w{2,})?)$")
+    @Pattern(regexp ="(\\p{L}{2,35}( ?\\p{L}{2,35}){0,6})$")
     private String country;
 
     @NotBlank(message="Phone number is mandatory")
-    @Pattern(regexp="^07[0-9]{8}$", message = "Phone number must have length 8 and start with \" 07 \". ")
+    @Pattern(regexp="^07[/d]{8}$", message = "Phone number must have length 8 and start with \" 07 \". ")
     private String phoneNumber;
 
     @Column(length = 500)
@@ -63,42 +62,12 @@ public class AppUser extends User implements Serializable {
 
     public AppUser(AppUserDTO appUserDTO)
     {
-        super(appUserDTO.getEmail(), appUserDTO.getName(), appUserDTO.getPassword(), String.valueOf(UserRoles.USER));
+        super(appUserDTO.getId(), appUserDTO.getEmail(), appUserDTO.getName(), appUserDTO.getPassword(), String.valueOf(UserRoles.USER));
         this.gender = appUserDTO.getGender();
         this.birthdate = appUserDTO.getBirthdate();
         this.country = appUserDTO.getCountry();
         this.phoneNumber = appUserDTO.getPhoneNumber();
         this.profileImageLink = appUserDTO.getProfileImageLink();
-    }
-
-    public AppUser(String gender, String birthdate, String country, String phoneNumber, String profileImageLink) {
-        super(String.valueOf(UserRoles.USER));
-        this.gender = gender;
-        this.birthdate = birthdate;
-        this.country = country;
-        this.phoneNumber = phoneNumber;
-        this.profileImageLink = profileImageLink;
-    }
-
-    public AppUser(String email, String name, String password, String gender, String birthdate, String country,
-                   String phoneNumber, String profileImageLink) {
-        super(email, name, password, String.valueOf(UserRoles.USER));
-        this.gender = gender;
-        this.birthdate = birthdate;
-        this.country = country;
-        this.phoneNumber = phoneNumber;
-        this.profileImageLink = profileImageLink;
-    }
-
-    public AppUser(Long id, String email, String name, String password, String gender, String birthdate, String country,
-                   String phoneNumber, String profileImageLink) {
-        super(id, email, name, password, String.valueOf(UserRoles.USER));
-
-        this.gender = gender;
-        this.birthdate = birthdate;
-        this.country = country;
-        this.phoneNumber = phoneNumber;
-        this.profileImageLink = profileImageLink;
     }
 
     public String getGender() {
@@ -107,10 +76,6 @@ public class AppUser extends User implements Serializable {
 
     public Integer getAge() {
         return Period.between(this.getInterpretedBirthdate(), LocalDate.now()).getYears();
-    }
-
-    public void setGender(String gender) {
-        this.gender = gender;
     }
 
     public String getBirthdate() {
@@ -123,24 +88,12 @@ public class AppUser extends User implements Serializable {
         return LocalDate.parse(birthdate, formatter);
     }
 
-    public void setBirthdate(String birthdate) {
-        this.birthdate = birthdate;
-    }
-
     public String getCountry() {
         return country;
     }
 
-    public void setCountry(String country) {
-        this.country = country;
-    }
-
     public String getPhoneNumber() {
         return phoneNumber;
-    }
-
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
     }
 
     public String getProfileImageLink() {
@@ -151,19 +104,9 @@ public class AppUser extends User implements Serializable {
         this.profileImageLink = profileImageLink;
     }
 
-    public void setAge(Integer age)
-    {
-        this.age = age;
-    }
-
     public Set<Review> getRatings()
     {
         return ratings;
-    }
-
-    public void setRatings(Set<Review> ratings)
-    {
-        this.ratings = ratings;
     }
 
     public Set<Comment> getComments()
@@ -171,12 +114,27 @@ public class AppUser extends User implements Serializable {
         return comments;
     }
 
-    public void setComments(Set<Comment> comments)
+    public void setBirthdate(String birthdate)
     {
-        this.comments = comments;
+        this.birthdate = birthdate;
     }
 
-    public void isValid(){
+    public void setGender(String gender)
+    {
+        this.gender = gender;
+    }
+
+    public void setCountry(String country)
+    {
+        this.country = country;
+    }
+
+    public void setPhoneNumber(String phoneNumber)
+    {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public void validate(){
         try {
             DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
             LocalDate.parse(this.birthdate, dateFormatter);
@@ -184,7 +142,6 @@ public class AppUser extends User implements Serializable {
             throw new BusinessException("Invalid date or invalid format.", "Json Format", HttpStatus.BAD_REQUEST);
         }
     }
-
 
     @Override
     public String toString() {

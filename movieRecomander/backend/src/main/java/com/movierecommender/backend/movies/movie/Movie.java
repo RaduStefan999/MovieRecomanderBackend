@@ -1,15 +1,11 @@
 package com.movierecommender.backend.movies.movie;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.movierecommender.backend.advice.BusinessException;
 import com.movierecommender.backend.comments.Comment;
 import com.movierecommender.backend.movies.moviegenre.MovieGenre;
 import com.movierecommender.backend.reviews.Review;
 import org.hibernate.annotations.GenericGenerator;
-import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.http.HttpStatus;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -18,11 +14,9 @@ import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Entity
 @PrimaryKeyJoinColumn(name = "movieId")
@@ -78,25 +72,7 @@ public class Movie implements Serializable
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Set<Comment> comments;
 
-    public Movie() {
-    }
-
-    public Movie(String name, String summary, String description, Integer ageRestriction,
-                 List<MovieGenre> movieGenres, String releaseDate, Integer duration, String trailerLink,
-                 String movieLink, String thumbnailLink, Set<Review> ratings, Set<Comment> comments) {
-        this.name = name;
-        this.summary = summary;
-        this.description = description;
-        this.ageRestriction = ageRestriction;
-        this.movieGenres = movieGenres;
-        this.releaseDate = releaseDate;
-        this.duration = duration;
-        this.trailerLink = trailerLink;
-        this.movieLink = movieLink;
-        this.thumbnailLink = thumbnailLink;
-        this.ratings = ratings;
-        this.comments = comments;
-    }
+    public Movie() {}
 
     public Movie(MovieDTO movieDTO)
     {
@@ -112,6 +88,7 @@ public class Movie implements Serializable
         this.thumbnailLink = movieDTO.getThumbnailLink();
         this.ratings = movieDTO.ratings;
         this.comments = movieDTO.comments;
+        this.averageRatingStars = this.getAverageRatingStars();
     }
 
     public Long getId() {
@@ -134,32 +111,16 @@ public class Movie implements Serializable
         return summary;
     }
 
-    public void setSummary(String summary) {
-        this.summary = summary;
-    }
-
     public String getDescription() {
         return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
     }
 
     public Integer getAgeRestriction() {
         return ageRestriction;
     }
 
-    public void setAgeRestriction(Integer ageRestriction) {
-        this.ageRestriction = ageRestriction;
-    }
-
     public List<MovieGenre> getMovieGenres() {
         return movieGenres;
-    }
-
-    public void setMovieGenres(List<MovieGenre> movieGenres) {
-        this.movieGenres = movieGenres;
     }
 
     public String getReleaseDate() {
@@ -172,56 +133,29 @@ public class Movie implements Serializable
         return LocalDate.parse(releaseDate, formatter);
     }
 
-    public void setReleaseDate(String releaseDate) {
-        this.releaseDate = releaseDate;
-    }
-
     public Integer getDuration() {
         return duration;
-    }
-
-    public void setDuration(Integer duration) {
-        this.duration = duration;
     }
 
     public String getTrailerLink() {
         return trailerLink;
     }
 
-    public void setTrailerLink(String trailerLink) {
-        this.trailerLink = trailerLink;
-    }
-
     public String getMovieLink() {
         return movieLink;
-    }
-
-    public void setMovieLink(String movieLink) {
-        this.movieLink = movieLink;
     }
 
     public String getThumbnailLink() {
         return thumbnailLink;
     }
 
-    public void setThumbnailLink(String thumbnailLink) {
-        this.thumbnailLink = thumbnailLink;
-    }
-
-    public Set<Review> getRatings() {
+    public Set<Review> getRatings()
+    {
         return ratings;
-    }
-
-    public void setRatings(Set<Review> ratings) {
-        this.ratings = ratings;
     }
 
     public Set<Comment> getComments() {
         return comments;
-    }
-
-    public void setComments(Set<Comment> comments) {
-        this.comments = comments;
     }
 
     public Double getAverageRatingStars() {
@@ -229,9 +163,8 @@ public class Movie implements Serializable
                 mapToInt(Integer::intValue).sum();
         int nrOfRatings = this.ratings.size();
 
-        if (nrOfRatings <= 0) {
+        if (nrOfRatings <= 0)
             return 1.0;
-        }
 
         return (double)totalRatings / nrOfRatings;
     }

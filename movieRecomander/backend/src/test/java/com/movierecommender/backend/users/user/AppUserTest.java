@@ -1,6 +1,5 @@
 package com.movierecommender.backend.users.user;
 
-import com.movierecommender.backend.users.User;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
@@ -11,21 +10,48 @@ class AppUserTest {
 
     @Test
     void getId() {
-        AppUser appUser = new AppUser(3L, "raulmadalin3@yahoo.com", "raul", "madalin", "", LocalDate.now().toString(), "", "", "");
+        AppUser appUser = new AppUser();
+        appUser.setId(3L);
+        appUser.setEmail("raulmadalin3@yahoo.com");
+        appUser.setName("raul");
+        appUser.setPassword("madalin");
+        appUser.setBirthdate(LocalDate.now().toString());
+        appUser.setProfileImageLink("");
+        appUser.setPhoneNumber("");
+        appUser.setCountry("");
+        appUser.setGender("");
         var response = appUser.getId();
         assertEquals(3, response);
     }
 
     @Test
     void getPassword() {
-        AppUser appUser = new AppUser(3L, "raulmadalin3@yahoo.com", "raul", "madalin", "", LocalDate.now().toString(), "", "", "");
+        AppUser appUser = new AppUser();
+        appUser.setId(3L);
+        appUser.setEmail("raulmadalin3@yahoo.com");
+        appUser.setName("raul");
+        appUser.setPassword("madalin");
+        appUser.setBirthdate(LocalDate.now().toString());
+        appUser.setProfileImageLink("");
+        appUser.setPhoneNumber("");
+        appUser.setCountry("");
+        appUser.setGender("");
         var response = appUser.getPassword();
         assertEquals("madalin", response);
     }
 
     @Test
     void testToString() {
-        AppUser appUser = new AppUser(3L, "raulmadalin3@yahoo.com", "raul", "madalin", "", LocalDate.now().toString(), "", "", "");
+        AppUser appUser = new AppUser();
+        appUser.setId(3L);
+        appUser.setEmail("raulmadalin3@yahoo.com");
+        appUser.setName("raul");
+        appUser.setPassword("madalin");
+        appUser.setBirthdate(LocalDate.now().toString());
+        appUser.setProfileImageLink("");
+        appUser.setPhoneNumber("");
+        appUser.setCountry("");
+        appUser.setGender("");
         var response = appUser.toString();
         assertEquals("AppUser{" +
                                 "User{" +
